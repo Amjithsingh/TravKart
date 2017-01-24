@@ -1,0 +1,20 @@
+//
+//  Constants.pch
+//  TravKart
+//
+//  Created by AMJITH  on 19/01/17.
+//  Copyright © 2017 Dunamis. All rights reserved.
+//
+
+#ifndef Constants_pch
+#define Constants_pch
+
+
+#define Login_Url   "http://www.travkart.com/xml_b2c_login.php"
+#define RegisterUrl "http://www.travkart.com/xml_b2c_register.php"
+//#define Home_WebView ""
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif /* Constants_pch */
