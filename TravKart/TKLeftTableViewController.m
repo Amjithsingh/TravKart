@@ -191,6 +191,25 @@
 }
 
 
+-(void) walletAction{
+ 
+    [self performSegueWithIdentifier:@"walletSegue" sender:self];
+}
+
+-(void)favoritesAction{
+
+    [self performSegueWithIdentifier:@"common_Identifier" sender:self];
+
+}
+
+-(void)bookAction
+{
+    
+    [self performSegueWithIdentifier:@"common_Identifier" sender:self];
+
+    
+    
+}
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -206,7 +225,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     if (indexPath.row  == 0) {
-        return 189;
+        return 180;
     }
     else{
         return 49;
@@ -219,6 +238,30 @@
         
         UserDetailsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FirstRowIdentifier" forIndexPath:indexPath];
         
+        cell.walletImg.userInteractionEnabled = YES;
+        cell.walletImg.tag = indexPath.row;
+        
+        UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(walletAction)];
+        tapped.numberOfTapsRequired = 1;
+        [cell.walletImg addGestureRecognizer:tapped];
+        
+        
+        cell.favorites.userInteractionEnabled = YES;
+        cell.favorites.tag = indexPath.row;
+        
+        UITapGestureRecognizer *tappedFav = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(favoritesAction)];
+        tappedFav.numberOfTapsRequired = 1;
+        [cell.favorites addGestureRecognizer:tappedFav];
+        
+        
+        
+        cell.bookings.userInteractionEnabled = YES;
+        cell.bookings.tag = indexPath.row;
+        
+        UITapGestureRecognizer *tappedBook = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bookAction)];
+        tappedBook.numberOfTapsRequired = 1;
+        [cell.favorites addGestureRecognizer:tappedBook];
+        
         
         if ([FIRAuth auth].currentUser) {
             // User is signed in.
@@ -229,7 +272,8 @@
             // The user's ID, unique to the Firebase project.
             // Do NOT use this value to authenticate with your backend server,
             // if you have one. Use getTokenWithCompletion:completion: instead.
-            cell.userEmailLabel.text = user.uid;
+            cell.userName.text  =   user.displayName;
+            cell.userEmailLabel.text = user.email;
             NSURL *photoURL = user.photoURL;
             cell.userImage.image    =   [UIImage imageWithData:[NSData dataWithContentsOfURL:photoURL]];
             // ...
@@ -242,9 +286,9 @@
             cell.userImage.userInteractionEnabled = YES;
             cell.userImage.tag = indexPath.row;
             
-            UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addImage)];
-            tapped.numberOfTapsRequired = 1;
-            [cell.userImage addGestureRecognizer:tapped];
+//            UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addImage)];
+//            tapped.numberOfTapsRequired = 1;
+//            [cell.userImage addGestureRecognizer:tapped];
         }
         else {
             cell.userName.text =   @"Guest";

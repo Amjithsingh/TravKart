@@ -21,12 +21,13 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.267540738096-ciqdbm89u6tssos5uku3sqpvm6cgtd52</string>
+				<string>com.googleusercontent.apps.267540738096-sejd9tbku8f2iudrnvtc0d925juhmdbm</string>
 			</array>
+             <key>CFBundleURLName</key>
+             <string></string>
+
 		</dict>
 		<dict>
 			<key>CFBundleURLSchemes</key>
@@ -49,7 +50,16 @@
 		<string>fb-messenger-api</string>
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
-	</array>
+<!--        <string>com.hbs.TravKart</string>-->
+<!--        <string>com.googleusercontent.apps.267540738096-sejd9tbku8f2iudrnvtc0d925juhmdbm</string>-->
+<!--        <string>com-google-gidconsent-google</string>-->
+<!--        <string>com-google-gidconsent-youtube</string>-->
+<!--        <string>com-google-gidconsent</string>-->
+<!--        <string>com.google.gppconsent.2.4.1</string>-->
+<!--        <string>com.google.gppconsent.2.4.0</string>-->
+<!--        <string>googlechrome</string>-->
+<!--        <string>googlechrome-x-callback</string>-->
+    </array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

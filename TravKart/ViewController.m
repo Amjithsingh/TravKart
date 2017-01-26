@@ -153,15 +153,54 @@ didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
     }
 }
 
-- (void)signIn:(GIDSignIn *)signIn didSignInForUser:(GIDGoogleUser *)user withError:(NSError *)error {
-    // Perform any operations on signed in user here.
-    NSString *userId = user.userID;                  // For client-side use only!
-    NSString *idToken = user.authentication.idToken; // Safe to send to the server
-    NSString *name = user.profile.name;
-    NSString *email = user.profile.email;
-    NSLog(@"Customer details: %@ %@ %@ %@", userId, idToken, name, email);
-    // ...
-}
+//- (void)signIn:(GIDSignIn *)signIn didSignInForUser:(GIDGoogleUser *)user withError:(NSError *)error {
+//    // Perform any operations on signed in user here.
+//    NSString *userId = user.userID;                  // For client-side use only!
+//    NSString *idToken = user.authentication.idToken; // Safe to send to the server
+//    NSString *name = user.profile.name;
+//    NSString *email = user.profile.email;
+//    NSLog(@"Customer details: %@ %@ %@ %@", userId, idToken, name, email);
+//    
+//    if (error == nil) {
+//        
+//        NSString *userId     = user.userID;                  // For client-side use only!
+//        NSString *idToken    = user.authentication.idToken; // Safe to send to the server
+//        NSString *fullName   = user.profile.name;
+//        NSString *givenName  = user.profile.givenName;
+//        NSString *familyName = user.profile.familyName;
+//        NSString *email      = user.profile.email;
+//        
+//        GIDAuthentication *authentication = user.authentication;
+//        FIRAuthCredential *credential =
+//        [FIRGoogleAuthProvider credentialWithIDToken:authentication.idToken
+//                                         accessToken:authentication.accessToken];
+//        
+//        [[FIRAuth auth] signInWithCredential:credential
+//                                  completion:^(FIRUser *user, NSError *error) {
+//                                      // ...
+//                                      if (error) {
+//                                          // ...
+//                                          NSLog(@"%@",user.displayName);
+//                                          return;
+//                                      }}] ;
+//        
+//        NSDictionary *statusText = @{@"statusText":
+//                                         [NSString stringWithFormat:@"Signed in user: %@",
+//                                          fullName]};
+//        [[NSNotificationCenter defaultCenter]
+//         postNotificationName:@"ToggleAuthUINotification"
+//         object:nil
+//         userInfo:statusText];
+//        
+//        // ...
+//    }
+//    else {
+//        // ...
+//    }
+//
+//    
+//    // ...
+//}
 
 
 
@@ -244,6 +283,9 @@ didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
 
 - (IBAction)googleSignin_btn:(id)sender {
 
+    
+    
+    [[GIDSignIn sharedInstance] signIn];
 //    [[[FIRAuth auth] signInWithCredential:credential
 //                              completion:^(FIRUser *user, NSError *error) {
 //                                  // ...
@@ -253,6 +295,31 @@ didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
 //                                  }}]
 
 }
+
+- (void)signInWillDispatch:(GIDSignIn *)signIn error:(NSError *)error {
+    
+}
+// Present a view that prompts the user to sign in with Google
+
+- (void)signIn:(GIDSignIn *)signIn presentViewController:(UIViewController *)viewController
+{
+    [self presentViewController:viewController animated:YES completion:nil];
+}
+// Dismiss the "Sign in with Google" view
+
+- (void)signIn:(GIDSignIn *)signIn dismissViewController:(UIViewController *)viewController {
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+}
+//completed sign In
+
+- (void)signIn:(GIDSignIn *)signIn didSignInForUser:(GIDGoogleUser *)user
+     withError:(NSError *)error {
+    //user signed in
+    //get user data in "user" (GIDGoogleUser object)
+}
+
+
 
 /*
 - (void)signIn:(GIDSignIn *)signIn
@@ -281,16 +348,95 @@ didSignInForUser:(GIDGoogleUser *)user
     
 }
 
+-(void) sendDeviceDetailsForNotification{
+    
+    NSString* Identifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString]; // IOS 6+
+    NSString *refreshedToken = [[FIRInstanceID instanceID] token];
+
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    // getting an NSString
+    NSString *userID    = [prefs stringForKey:@"userID"];
+    NSString *userType  = [prefs stringForKey:@"User_type"];
+    
+    
+//                              userID
+//    userType
+//    tokenID
+//    deviceID
+//    
+    
+    NSDictionary *foodDict  =   [[NSDictionary alloc] initWithObjectsAndKeys:Identifier,@"deviceID",refreshedToken,@"tokenID", userID,@"userID",userType,@"userType",  nil];
+    
+    if ([Utility reachable]) {
+        // 1
+        NSURL *url = [NSURL URLWithString:@"http://www.travkart.com/fcm_token_push.php"];
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+        
+        // 2
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+        request.HTTPMethod = @"POST";
+        
+        // 3
+        //NSDictionary *dictionary = @{@"key1": @"value1"};
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:foodDict
+                                                       options:kNilOptions error:&error];
+        
+        NSMutableString *urlString      =   [[NSMutableString alloc]initWithFormat:@"[%@]",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]];
+        NSData *postData                =   [urlString dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+        
+        
+        
+        if (!error) {
+            // 4
+            NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                                       fromData:postData completionHandler:^(NSData *data,NSURLResponse *response,NSError *error) {
+                                                                           
+                                                                           NSDictionary *result            =  [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                                                                           
+                                                                           NSLog(@"result %@",result);
+                                                                           
+                                                                           
+                                                                       }];
+            [uploadTask resume];
+            
+        }
+    }
+    else{
+        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Please check your internet coneectivity and try again!" delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil];
+        [alert show];
+        
+
+    }
+    
+    
+}
+
+
+
+
 - (IBAction)skipActionHandler:(id)sender {
     
+    if (_segmentControl.selectedSegmentIndex == 0) {
+        user_type = @"guest";
+    }
+    else{
+        user_type = @"agent";
+    }
     [[NSUserDefaults standardUserDefaults] setObject:user_type forKey:@"User_type"];
     //[[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"agentID"];
        [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"userID"];
     
     [[NSUserDefaults standardUserDefaults] synchronize];
-
+    
+    [self sendDeviceDetailsForNotification];
+    
     [self performSegueWithIdentifier:@"GoToMainViewController" sender:self];
 }
+
+
+
 
 -(void) sendDetailsToServer:(NSString *)emailId withPassword: (NSString *)password
 {
@@ -301,7 +447,7 @@ didSignInForUser:(GIDGoogleUser *)user
 //    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
     
    
-    if (_segmentControl.selected == 0) {
+    if (_segmentControl.selectedSegmentIndex == 0) {
         user_type   =   @"guest";
     }
     else{
@@ -335,25 +481,33 @@ didSignInForUser:(GIDGoogleUser *)user
 //    }
     
     
-    
-    
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc]
-                                    initWithURL:[NSURL
-                                                 URLWithString:urlString]];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"text/xml"
-   forHTTPHeaderField:@"Content-type"];
-    
-       [request setValue:[NSString stringWithFormat:@"%lu",
-                       (unsigned long)[xmlString length]]
-   forHTTPHeaderField:@"Content-length"];
-    
-    [request setHTTPBody:[xmlString 
-                          dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSURLConnection *con=[NSURLConnection connectionWithRequest:request delegate:self];
+    if ([Utility reachable]) {
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc]
+                                        initWithURL:[NSURL
+                                                     URLWithString:urlString]];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"text/xml"
+       forHTTPHeaderField:@"Content-type"];
+        
+        [request setValue:[NSString stringWithFormat:@"%lu",
+                           (unsigned long)[xmlString length]]
+       forHTTPHeaderField:@"Content-length"];
+        
+        [request setHTTPBody:[xmlString
+                              dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSURLConnection *con=[NSURLConnection connectionWithRequest:request delegate:self];
 
+    }
+    else{
+        
+        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Please check your internet coneectivity" delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil];
+        [alert show];
+
+    }
+    
+    
 //    [[NSURLConnection alloc]
 //     initWithRequest:request
 //     delegate:self];
@@ -422,35 +576,48 @@ didSignInForUser:(GIDGoogleUser *)user
     NSError *error1;
     NSDictionary *dict=[XMLReader dictionaryForXMLData:xmlData error:&error1];
     
-    NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
-    [userArray addObject:[dict objectForKey:@"USERRESULT"]];
-    
-    
-    //NSString *valueToSave = @"someValue";
-    [[NSUserDefaults standardUserDefaults] setObject:user_type forKey:@"User_type"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] forKey:@"agentID"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"MARKUPCLASS"] forKey:@"markupclass"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USEREMAIL"] forKey:@"usermail"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERMOBILE"]  forKey:@"usermobile"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERNAME"] forKey:@"username"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERPHONE"] forKey:@"userphone"];
-    [[NSUserDefaults standardUserDefaults] setObject:   [[userArray objectAtIndex:0]valueForKey:@"USERPHOTO"] forKey:@"userphoto"];
-     [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"is_master_user"] forKey:@"is_master_user"];
- 
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    
-    
-    if ([[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] isEqualToString:@"0"]) {
+    if (!(dict == nil)) {
+        NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
+        [userArray addObject:[dict objectForKey:@"USERRESULT"]];
         
-        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Invalid Username or Password" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
-        [alert show];
-    }
-    else{
         
-        [self performSegueWithIdentifier:@"GoToMainViewController" sender:self];
+        //NSString *valueToSave = @"someValue";
+        [[NSUserDefaults standardUserDefaults] setObject:user_type forKey:@"User_type"];
+        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] forKey:@"agentID"];
+        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"MARKUPCLASS"] forKey:@"markupclass"];
+        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USEREMAIL"] forKey:@"usermail"];
+        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
+        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERMOBILE"]  forKey:@"usermobile"];
+        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERNAME"] forKey:@"username"];
+        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERPHONE"] forKey:@"userphone"];
+        [[NSUserDefaults standardUserDefaults] setObject:   [[userArray objectAtIndex:0]valueForKey:@"USERPHOTO"] forKey:@"userphoto"];
+        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"is_master_user"] forKey:@"is_master_user"];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        
+        [self sendDeviceDetailsForNotification];
+        
+        
+        
+        if ([[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] isEqualToString:@"0"]) {
+            
+            UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Invalid Username or Password" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
+            [alert show];
+        }
+        else{
+            
+            [self performSegueWithIdentifier:@"GoToMainViewController" sender:self];
+            
+        }
 
+    }
+    else
+    {
+        
+        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Login failed" delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil];
+        [alert show];
+        
     }
     
     
@@ -539,7 +706,7 @@ didSignInForUser:(GIDGoogleUser *)user
     else{
         
         
-        if (_segmentControl.selected == 0) {
+        if (_segmentControl.selectedSegmentIndex == 0) {
             user_type   =   @"guest";
         }
         else{
@@ -580,6 +747,152 @@ didSignInForUser:(GIDGoogleUser *)user
     
     
 }
+
+
+
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    //NSString *strOtp    = [[userArray objectAtIndex:0]valueForKey:@"OTACODE"];
+    
+    if (buttonIndex == 1)
+    {
+        if([self resetPassword:[[alertView textFieldAtIndex:0]text]]){
+            
+            UIAlertView * networkAlert  =   [[UIAlertView alloc]initWithTitle:@"TravKart" message:@"password sent to your mail" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [networkAlert show];
+
+        }
+//        if ([[[alertView textFieldAtIndex:0]text] isEqualToString:strOtp ]) {
+            
+//            [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
+//            [[NSUserDefaults standardUserDefaults] setObject:[ self.email.text valueForKey:@"USEREMAIL"] forKey:@"usermail"];
+//            [[NSUserDefaults standardUserDefaults] setObject:[ self.firtsName.text valueForKey:@"USERNAME"] forKey:@"username"];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
+//            
+//            [self.navigationController popViewControllerAnimated:NO];
+//            NSLog(@"loginSuccess!");
+            
+//        }
+    }
+}
+
+
+-(BOOL)resetPassword:(NSString*)mailID
+{
+    NSString *status;
+    NSString *restaurantId;
+    
+    if ([Utility reachable]) {
+        
+        
+        //NSString* Identifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        
+        
+        //NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
+        //[dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        //NSLog(@"%@",[dateFormatter stringFromDate:[NSDate date]]);
+        //NSDate *gmtDate     =   [self convertToUTC:[NSDate date]];
+//        NSString *curDate   =   [NSString stringWithFormat:@"%@",[NSDate date]];
+//        
+//        NSString *editedString  =   [curDate substringToIndex:19];
+//
+        NSError *error;
+        
+        
+        if (_segmentControl.selectedSegmentIndex == 0) {
+            user_type   =   @"guest";
+        }
+        else{
+            user_type   =   @"agent";
+        }
+        
+        NSString *xmlString;
+        
+        NSString *urlString;
+//        
+//        NSURLRequest *req=[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://indianbloodbank.com/api/donors/?bloodgroup=O%2B"]];
+//        NSError *err;
+//        NSURLResponse *res=nil;
+//        xmldata=[NSURLConnection sendSynchronousRequest:req returningResponse:&res error:&err];
+//        
+        
+        urlString   =  @"http://www.travkart.com/xml_forgot_password.php";
+        xmlString = [NSString stringWithFormat:@"<logdata><email>%@</email><type>%@</type></logdata>",mailID,user_type];;
+        
+        
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc]
+                                        initWithURL:[NSURL
+                                                     URLWithString:urlString]];
+        
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"text/xml"
+       forHTTPHeaderField:@"Content-type"];
+        
+        [request setValue:[NSString stringWithFormat:@"%lu",
+                           (unsigned long)[xmlString length]]
+       forHTTPHeaderField:@"Content-length"];
+        
+        [request setHTTPBody:[xmlString
+                              dataUsingEncoding:NSUTF8StringEncoding]];
+
+        NSHTTPURLResponse *urlResponse  =  nil;
+        NSData *responseData            =  [NSURLConnection  sendSynchronousRequest:request returningResponse:&urlResponse error:&error];
+        
+        
+        if(!(responseData == nil)){
+            
+            NSError *error1;
+            NSDictionary *dict=[XMLReader dictionaryForXMLData:xmlData error:&error1];
+            
+            //[Utility addtoplist:restaurantId key:@"rs_id" plist:@"DynaFP-Plist"];
+         
+            return YES;
+
+        }
+        else{
+                        UIAlertView * networkAlert  =   [[UIAlertView alloc]initWithTitle:@"TravKart" message:@"Reset failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                        [networkAlert show];
+            
+            return NO;
+        }
+        
+    }
+    else{
+//        failMsgs    = @"Internet not available! Please check your connectivity and try again";
+//        
+        //        status  =   @"network_Failure";
+                UIAlertView * networkAlert  =   [[UIAlertView alloc]initWithTitle:@"TravKart" message:@"Network is not available" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [networkAlert show];
+    
+        return NO;
+    }
+
+
+}
+
+- (IBAction)forgotAction:(id)sender {
+    
+    UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:@"TravKart" message:@"Enter the registered email-id" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+    [dialog setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    
+    //        [dialog setDelegate:self];
+    //        [dialog setTitle:@"Enter OTP"];
+    //        [dialog setMessage:@" "];
+    //        [dialog addButtonWithTitle:@"Cancel"];
+    //        [dialog addButtonWithTitle:@"OK"];
+    
+    //        otpField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, 45.0, 245.0, 25.0)];
+    //        [otpField setBackgroundColor:[UIColor grayColor]];
+    //        [dialog addSubview:otpField];
+    [dialog show];
+    
+    CGAffineTransform moveUp = CGAffineTransformMakeTranslation(0.0, 100.0);
+    [dialog setTransform: moveUp];
+}
+
+
+
 - (IBAction)fb_loginManage:(id)sender {
     
 //    FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
@@ -595,14 +908,16 @@ didSignInForUser:(GIDGoogleUser *)user
     if ([FBSDKAccessToken currentAccessToken])
         
     {
-        
+        [self sendDetailsToServer:nil withPassword:nil];
+
 //        [self createFbShareButton];
-//        
+//
 //        [self shareImage];
     }
     else
     {
         FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+        login.loginBehavior=FBSDKLoginBehaviorWeb;
         [login
          logInWithReadPermissions: @[@"public_profile",@"email"]
          fromViewController:self
@@ -621,19 +936,20 @@ didSignInForUser:(GIDGoogleUser *)user
                  [[FIRAuth auth] signInWithCredential:credential
                                            completion:^(FIRUser *user, NSError *error) {
                                                // ...
-                                               if (error) {
+                                               if (!error) {
                                                    FIRUser  *user = [FIRAuth auth].currentUser;
                                                    NSString *name = user.displayName;
                                                    NSString *email = user.email;
                                                    NSString *photoUrl  =   user.photoURL;
 
                                                    //return;
+                                                   [self sendDetailsToServer:nil withPassword:nil];
+
                                                }}] ;
 
                  
                  
                 
-                 [self sendDetailsToServer:nil withPassword:nil];
 
                  NSLog(@"Logged in");
                  //[self shareImage];

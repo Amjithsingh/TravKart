@@ -7,6 +7,7 @@
 //
 
 #import "TKWalletViewController.h"
+#import "Utility.h"
 
 @interface TKWalletViewController ()<UIWebViewDelegate>
 @property (weak, nonatomic) IBOutlet UISegmentedControl *walletSegmentControl;
@@ -29,17 +30,33 @@
     NSString *userID    = [prefs stringForKey:@"userID"];
     NSString *userType  = [prefs stringForKey:@"User_type"];
 
-    NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/add_cash_app_new.php?&type=%@&appuserid=%@",userType,userID];
     
+    self.walletWebView.delegate = self;
     
-    NSURL *url = [NSURL URLWithString:fullURL];
-    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-    [self.walletWebView loadRequest:requestObj];
-
+    if ([Utility reachable]) {
+        
+        NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/add_cash_app_new.php?&type=%@&appuserid=%@",userType,userID];
+        
+        
+        NSURL *url = [NSURL URLWithString:fullURL];
+        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+        [self.walletWebView loadRequest:requestObj];
+        
+    }
+    else{
+        
+        CGRect frame = [self.walletWebView frame];
+        UIImageView *noInternet =   [[UIImageView alloc] initWithFrame:frame];
+        noInternet.image    =   [UIImage imageNamed:@"no_connection_tower.jpg"];
+        [self.view addSubview:noInternet];
+        
+    }
+    
+   
 }
 - (IBAction)backByn_Action:(id)sender {
     
-    [self.navigationController popViewControllerAnimated:NO];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"OpenSideMenuNotification" object:self];
 }
 
 - (IBAction)segmentSwitch:(id)sender {
@@ -51,6 +68,7 @@
     NSString *userID    = [prefs stringForKey:@"userID"];
     NSString *userType  = [prefs stringForKey:@"User_type"];
     
+    NSString *fullURL;
 
     
     
@@ -59,51 +77,56 @@
         
         //http://www.travkart.com/mobapp/add_cash_app_new.php?&type=”user_type”&appuserid=”user_id”
         
-        NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/add_cash_app_new.php?&type=%@&appuserid=%@",userType,userID];
+        fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/add_cash_app_new.php?&type=%@&appuserid=%@",userType,userID];
         
         
-        NSURL *url = [NSURL URLWithString:fullURL];
-        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-        [self.walletWebView loadRequest:requestObj];
         
     }
     else if(selectedSegment == 1){
         //toggle the correct view to be visible
         
-        NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/travcash-transactions-apps.php?&type=%@&appuserid=%@",userType,userID];
+        fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/travcash-transactions-apps.php?&type=%@&appuserid=%@",userType,userID];
         
         
-        NSURL *url = [NSURL URLWithString:fullURL];
-        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-        [self.walletWebView loadRequest:requestObj];
-        
-    //http://www.travkart.com/mobapp/travcash-transactions-apps.php?&type=”user_type”&appuserid=”user_id”
-
     }
     else
     {
+        
         NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/wallet-transactions-apps.php?&type=%@&appuserid=%@",userType,userID];
         
+    }
+    
+    
+    if ([Utility reachable]) {
         
         NSURL *url = [NSURL URLWithString:fullURL];
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
         [self.walletWebView loadRequest:requestObj];
-
         
-        //http://www.travkart.com/mobapp/wallet-transactions-apps.php?&type=”user_type”&appuserid=”user_id”
-
     }
+    else{
+        
+        CGRect frame = [self.walletWebView frame];
+        UIImageView *noInternet =   [[UIImageView alloc] initWithFrame:frame];
+        noInternet.image    =   [UIImage imageNamed:@"no_connection_tower.jpg"];
+        [self.view addSubview:noInternet];
+        
+    }
+
+    
+
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView;
 {
     self.activityLoaderView.hidden  =   NO;
     [self.webLoader startAnimating];
+    [self.view bringSubviewToFront:self.activityLoaderView];
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView;
 {
     
-    self.activityLoaderView.hidden  =   NO;
+    self.activityLoaderView.hidden  =   YES;
     [self.webLoader stopAnimating];
     
     
@@ -111,6 +134,12 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;
 {
     
+    CGRect frame = [self.walletWebView frame];
+    UIImageView *noInternet =   [[UIImageView alloc] initWithFrame:frame];
+    noInternet.image    =   [UIImage imageNamed:@"no_connection_tower.jpg"];
+    [self.view addSubview:noInternet];
+    
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -128,4 +157,94 @@
 }
 */
 
+- (IBAction)walletControl:(id)sender {
+}
+
+- (IBAction)walletBtns:(id)sender {
+    
+    
+    int selectedSegment    =   [sender tag];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    // getting an NSString
+    NSString *userID    = [prefs stringForKey:@"userID"];
+    NSString *userType  = [prefs stringForKey:@"User_type"];
+    
+    
+    
+    
+    if (selectedSegment == 0) {
+        //toggle the correct view to be visible
+        
+        //http://www.travkart.com/mobapp/add_cash_app_new.php?&type=”user_type”&appuserid=”user_id”
+        
+        [self.addMoney setBackgroundColor:[UIColor orangeColor]];
+        [self.addMoney setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+
+        [self.travcash setBackgroundColor:[UIColor whiteColor]];
+        [self.travcash setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+
+        [self.transactions setBackgroundColor:[UIColor whiteColor]];
+        [self.transactions setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+
+        
+        NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/add_cash_app_new.php?&type=%@&appuserid=%@",userType,userID];
+        
+        
+        NSURL *url = [NSURL URLWithString:fullURL];
+        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+        [self.walletWebView loadRequest:requestObj];
+        
+    }
+    else if(selectedSegment == 1){
+        //toggle the correct view to be visible
+        
+        
+        [self.travcash setBackgroundColor:[UIColor orangeColor]];
+        [self.travcash setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+
+        [self.addMoney setBackgroundColor:[UIColor whiteColor]];
+        [self.addMoney setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        
+        [self.transactions setBackgroundColor:[UIColor whiteColor]];
+        [self.transactions setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+
+        
+        NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/travcash-transactions-apps.php?&type=%@&appuserid=%@",userType,userID];
+        
+        
+        NSURL *url = [NSURL URLWithString:fullURL];
+        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+        [self.walletWebView loadRequest:requestObj];
+        
+        //http://www.travkart.com/mobapp/travcash-transactions-apps.php?&type=”user_type”&appuserid=”user_id”
+        
+    }
+    else
+    {
+        
+        [self.transactions setBackgroundColor:[UIColor orangeColor]];
+        [self.transactions setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+
+        
+        [self.travcash setBackgroundColor:[UIColor whiteColor]];
+        [self.travcash setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+
+        [self.addMoney setBackgroundColor:[UIColor whiteColor]];
+        [self.addMoney setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+
+        
+        NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/wallet-transactions-apps.php?&type=%@&appuserid=%@",userType,userID];
+        
+        
+        NSURL *url = [NSURL URLWithString:fullURL];
+        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+        [self.walletWebView loadRequest:requestObj];
+        
+        
+        //http://www.travkart.com/mobapp/wallet-transactions-apps.php?&type=”user_type”&appuserid=”user_id”
+        
+    }
+
+}
 @end

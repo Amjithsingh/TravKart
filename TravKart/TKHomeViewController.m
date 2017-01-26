@@ -81,9 +81,21 @@
 - (NSString *)segueIdentifierForIndexPathInLeftMenu:(NSIndexPath *)indexPath
 {
     NSString *identifier = @"";
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    // getting an NSString
+    NSString *userID    = [prefs stringForKey:@"userID"];
+//    userName  = [prefs stringForKey:@"username"];
+//    userMail  = [prefs stringForKey:@"usermail"];
+
+    
     switch (indexPath.row) {
         
         case 0:
+//            if (![userID isEqualToString:@"0"]) {
+//                identifier = @"common_Identifier";
+//            }
+//            else
             identifier = @"showFirstVC";
             break;
         case 1:
@@ -127,13 +139,13 @@
             identifier = @"common_Identifier";
             break;
         case 14:
-            identifier = @"common_Identifier";
+            identifier = @"refer_identifier";
             break;
         case 15:
             identifier = @"common_Identifier";
             break;
         case 16:
-            identifier = @"common_Identifier";
+            identifier = @"refer_identifier";
             break;
         case 17:
             identifier = @"common_Identifier";

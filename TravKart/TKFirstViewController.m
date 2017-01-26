@@ -8,13 +8,16 @@
 
 #import "TKFirstViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
+#import "Utility.h"
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 @import GoogleSignIn;
 @import FirebaseAuth;
 
-@interface TKFirstViewController ()
+@interface TKFirstViewController ()<UIWebViewDelegate>
+{
+    UIActivityIndicatorView* activityIndicator;
+}
 @property (weak, nonatomic) IBOutlet UIWebView *homeWebView;
 @property (weak, nonatomic) IBOutlet UIButton *logi_detail;
 - (IBAction)loginOrLogout:(id)sender;
@@ -66,6 +69,9 @@
     NSString *userID    = [prefs stringForKey:@"userID"];
     NSString *userType  = [prefs stringForKey:@"User_type"];
 
+    
+    self.homeWebView.delegate = self;
+    
     if ([userID isEqualToString:@"0"]) {
         
         [self.logi_detail setImage:[UIImage imageNamed:@"login_icon_new.png"] forState:UIControlStateNormal];
@@ -74,15 +80,25 @@
         [self.logi_detail setImage:[UIImage imageNamed:@"logo_out.png"] forState:UIControlStateNormal];
 
     }
-    
-    NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/index.php?mobileapp=1&type=%@&appuserid=%@",userType,userID];
-    
-    
-    NSURL *url = [NSURL URLWithString:fullURL];
-    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-    [self.homeWebView loadRequest:requestObj];
-    //self.homeWebView loadRequest:[NSURL req]
+    if ([Utility reachable]) {
 
+        NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/index.php?mobileapp=1&type=%@&appuserid=%@",userType,userID];
+        
+        
+        NSURL *url = [NSURL URLWithString:fullURL];
+        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+        [self.homeWebView loadRequest:requestObj];
+        //self.homeWebView loadRequest:[NSURL req]
+
+    }
+    else{
+        CGRect frame = [self.homeWebView frame];
+        UIImageView *noInternet =   [[UIImageView alloc] initWithFrame:frame];
+        noInternet.image    =   [UIImage imageNamed:@"no_connection_tower.jpg"];
+        [self.view addSubview:noInternet];
+    }
+    
+    
 }
 
 
@@ -116,6 +132,35 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+
+
+- (void)webViewDidStartLoad:(UIWebView *)webView;
+{
+    //self.activityLoaderView.hidden  =   NO;
+
+    activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [activityIndicator setColor:[UIColor orangeColor]];
+    
+    activityIndicator.frame = CGRectMake(200.0, 200.0, 100.0, 40.0);
+    activityIndicator.center = self.view.center;
+    [self.view addSubview: activityIndicator];
+    [self.view bringSubviewToFront:activityIndicator];
+
+    [activityIndicator startAnimating];
+    //[self.webLoader startAnimating];
+}
+- (void)webViewDidFinishLoad:(UIWebView *)webView;
+{
+    
+    //self.activityLoaderView.hidden  =   NO;
+    //[self.webLoader stopAnimating];
+    
+    activityIndicator.hidden    =   YES;
+    
+}
+
+
 
 - (IBAction)loginOrLogout:(id)sender {
     

@@ -13,7 +13,10 @@
 
 
 
-@interface TKCommonViewController ()
+@interface TKCommonViewController ()<UIWebViewDelegate>
+{
+    UIActivityIndicatorView *activityIndicator;
+}
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIWebView *HomewebView;
 
@@ -64,17 +67,23 @@
     NSString *userType  = [prefs stringForKey:@"User_type"];
     
     
-    
-    
-    
-  
-    
-    
     int indexVal        =   [[Utility getfromplist:@"index" plist:@"TravKart_Info"] intValue];
     NSString *urlString;
     
+    self.HomewebView.delegate   =   self;
     
     switch (indexVal) {
+        case 111:
+            self.titleLabel.text    =   @"My Bookings";
+            urlString   =   [NSString stringWithFormat:@"http://www.travkart.com/mobapp/my_bookings_app.php?&type=%@&appuserid=%@",userType,userID];
+        
+        case  112:
+            self.titleLabel.text    =   @"Favorites";
+            urlString   =   [NSString stringWithFormat:@"http://www.travkart.com/mobapp/my_favourites.php?&type=%@&appuserid=%@",userType,userID];
+            
+        case 0:
+            self.titleLabel.text    =   @"My Profile";
+            urlString   =  [NSString stringWithFormat:@"http://www.travkart.com/mobapp/edit-my-profile.php?&type=%@&appuserid=%@",userType,userID];
         case 7:
             
             self.titleLabel.text    =   @"Theme Holidays";
@@ -123,7 +132,7 @@
             {
                 self.titleLabel.text    =   @"Like us on Facebook";
             
-                NSURL *facebookURL = [NSURL URLWithString:@"fb://profile/113810631976867"];
+                NSURL *facebookURL = [NSURL URLWithString:@"https://www.facebook.com/travkart/?ref=br_rs"];
                 
                 if([[UIApplication sharedApplication] canOpenURL:facebookURL])
                 {
@@ -198,12 +207,54 @@
     }
     
     
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-    [self.HomewebView loadRequest:requestObj];
+    if ([Utility reachable]) {
+        
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+        [self.HomewebView loadRequest:requestObj];
+        
+    }
+    else{
+        
+        CGRect frame = [self.HomewebView frame];
+        UIImageView *noInternet =   [[UIImageView alloc] initWithFrame:frame];
+        noInternet.image    =   [UIImage imageNamed:@"no_connection_tower.jpg"];
+        [self.view addSubview:noInternet];
+        
+    }
 
+  
     
 }
+
+
+- (void)webViewDidStartLoad:(UIWebView *)webView;
+{
+    //self.activityLoaderView.hidden  =   NO;
+    
+    activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [activityIndicator setColor:[UIColor orangeColor]];
+    
+    activityIndicator.frame = CGRectMake(200.0, 200.0, 100.0, 40.0);
+    activityIndicator.center = self.view.center;
+    [self.view addSubview: activityIndicator];
+    [self.view bringSubviewToFront:activityIndicator];
+    
+    [activityIndicator startAnimating];
+    //[self.webLoader startAnimating];
+}
+- (void)webViewDidFinishLoad:(UIWebView *)webView;
+{
+    
+    //self.activityLoaderView.hidden  =   NO;
+    //[self.webLoader stopAnimating];
+    
+    activityIndicator.hidden    =   YES;
+    
+}
+
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

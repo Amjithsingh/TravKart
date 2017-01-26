@@ -84,6 +84,12 @@
 		79A6D2611E315D8D00EBCD2F /* TKSearchBudgetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A6D2601E315D8D00EBCD2F /* TKSearchBudgetViewController.m */; };
 		79A6D2641E315DC700EBCD2F /* TKOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A6D2631E315DC700EBCD2F /* TKOffersViewController.m */; };
 		79A6D2671E315DF800EBCD2F /* TKNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A6D2661E315DF800EBCD2F /* TKNotificationsViewController.m */; };
+		79A769361E37DA3D0056109F /* contacts.png in Resources */ = {isa = PBXBuildFile; fileRef = 79A769341E37DA3D0056109F /* contacts.png */; };
+		79A769371E37DA3D0056109F /* refer_earn_pic.png in Resources */ = {isa = PBXBuildFile; fileRef = 79A769351E37DA3D0056109F /* refer_earn_pic.png */; };
+		79A7693A1E37DB190056109F /* TKReferViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A769391E37DB190056109F /* TKReferViewController.m */; };
+		79A7693C1E39EB070056109F /* google_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 79A7693B1E39EB070056109F /* google_plus.png */; };
+		79A7693F1E3A57E60056109F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A7693D1E3A57E60056109F /* Reachability.m */; };
+		79A769411E3A5DB60056109F /* no_connection_tower.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 79A769401E3A5DB60056109F /* no_connection_tower.jpg */; };
 		79AD00931E3329B800D7A6A5 /* home.png in Resources */ = {isa = PBXBuildFile; fileRef = 79AD00921E3329B800D7A6A5 /* home.png */; };
 		79AD00951E332AF200D7A6A5 /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 79AD00941E332AF200D7A6A5 /* search.png */; };
 		79AD00971E332AFB00D7A6A5 /* flash_sale.png in Resources */ = {isa = PBXBuildFile; fileRef = 79AD00961E332AFB00D7A6A5 /* flash_sale.png */; };
@@ -252,6 +258,14 @@
 		79A6D2631E315DC700EBCD2F /* TKOffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKOffersViewController.m; sourceTree = "<group>"; };
 		79A6D2651E315DF800EBCD2F /* TKNotificationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKNotificationsViewController.h; sourceTree = "<group>"; };
 		79A6D2661E315DF800EBCD2F /* TKNotificationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKNotificationsViewController.m; sourceTree = "<group>"; };
+		79A769341E37DA3D0056109F /* contacts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contacts.png; sourceTree = "<group>"; };
+		79A769351E37DA3D0056109F /* refer_earn_pic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refer_earn_pic.png; sourceTree = "<group>"; };
+		79A769381E37DB190056109F /* TKReferViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKReferViewController.h; sourceTree = "<group>"; };
+		79A769391E37DB190056109F /* TKReferViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKReferViewController.m; sourceTree = "<group>"; };
+		79A7693B1E39EB070056109F /* google_plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = google_plus.png; sourceTree = "<group>"; };
+		79A7693D1E3A57E60056109F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		79A7693E1E3A57E60056109F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		79A769401E3A5DB60056109F /* no_connection_tower.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = no_connection_tower.jpg; sourceTree = "<group>"; };
 		79AD00921E3329B800D7A6A5 /* home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home.png; sourceTree = "<group>"; };
 		79AD00941E332AF200D7A6A5 /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search.png; sourceTree = "<group>"; };
 		79AD00961E332AFB00D7A6A5 /* flash_sale.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flash_sale.png; sourceTree = "<group>"; };
@@ -340,11 +354,16 @@
 			children = (
 				79E3BC1C1E368004001FF2CB /* TravKart.entitlements */,
 				79A6D25E1E315C3100EBCD2F /* Image_Drawer */,
+				79A769331E37DA3D0056109F /* Refer and earn */,
 				79E3BC201E36A51A001FF2CB /* Home page */,
 				79467A0C1E37654300541A12 /* request.png */,
+				79A769401E3A5DB60056109F /* no_connection_tower.jpg */,
+				79A7693B1E39EB070056109F /* google_plus.png */,
 				795CE4531E2D3C7D0041A885 /* AMSlideMenu */,
 				79A6D25D1E315C0600EBCD2F /* TableViewCell */,
 				796B61D11E305CD4003A56D5 /* Constants.pch */,
+				79A7693D1E3A57E60056109F /* Reachability.m */,
+				79A7693E1E3A57E60056109F /* Reachability.h */,
 				32D645411E1F7EBF000F15D9 /* AppDelegate.h */,
 				32D645421E1F7EBF000F15D9 /* AppDelegate.m */,
 				79AD009F1E335C1200D7A6A5 /* Utility.h */,
@@ -381,6 +400,8 @@
 				79467A0F1E3768FE00541A12 /* TKEnquiryViewController.m */,
 				79467A111E37693C00541A12 /* TKRequestCallViewController.h */,
 				79467A121E37693C00541A12 /* TKRequestCallViewController.m */,
+				79A769381E37DB190056109F /* TKReferViewController.h */,
+				79A769391E37DB190056109F /* TKReferViewController.m */,
 				795CE44F1E2D3BA60041A885 /* SWRevealViewController */,
 				32D645471E1F7EBF000F15D9 /* Main.storyboard */,
 				32D6454D1E1F7EBF000F15D9 /* Assets.xcassets */,
@@ -537,6 +558,15 @@
 				79710C711E350DC6001C9B8E /* user.png */,
 			);
 			name = Image_Drawer;
+			sourceTree = "<group>";
+		};
+		79A769331E37DA3D0056109F /* Refer and earn */ = {
+			isa = PBXGroup;
+			children = (
+				79A769341E37DA3D0056109F /* contacts.png */,
+				79A769351E37DA3D0056109F /* refer_earn_pic.png */,
+			);
+			path = "Refer and earn";
 			sourceTree = "<group>";
 		};
 		79E3BC201E36A51A001FF2CB /* Home page */ = {
@@ -711,6 +741,7 @@
 				79AD009B1E332BA300D7A6A5 /* notification_orange.png in Resources */,
 				79710C221E33EE93001C9B8E /* contact_us.png in Resources */,
 				79A6D2481E31351300EBCD2F /* my_bookings.png in Resources */,
+				79A7693C1E39EB070056109F /* google_plus.png in Resources */,
 				79A6D2501E3144EE00EBCD2F /* splash_background.jpg in Resources */,
 				79E3BC261E36A51A001FF2CB /* call_back.png in Resources */,
 				79A6D24C1E3135AA00EBCD2F /* favourite_ic.png in Resources */,
@@ -719,6 +750,7 @@
 				79710C321E33F107001C9B8E /* logout.png in Resources */,
 				79710C681E34AFF1001C9B8E /* TravKart_Info.plist in Resources */,
 				79710C641E349AED001C9B8E /* ic_reorder_white_18pt_3x.png in Resources */,
+				79A769411E3A5DB60056109F /* no_connection_tower.jpg in Resources */,
 				79710C6F1E34E052001C9B8E /* notification_white.png in Resources */,
 				79710C6D1E34E051001C9B8E /* login_icon_new.png in Resources */,
 				79467A0D1E37654300541A12 /* request.png in Resources */,
@@ -731,11 +763,13 @@
 				79AD009D1E33401B00D7A6A5 /* logo.png in Resources */,
 				79710C301E33F0ED001C9B8E /* privacy.png in Resources */,
 				79E3BC271E36A51A001FF2CB /* contact_us.png in Resources */,
+				79A769361E37DA3D0056109F /* contacts.png in Resources */,
 				79710C2A1E33EEC0001C9B8E /* rate_us.png in Resources */,
 				79710C201E33EE83001C9B8E /* trending_holidays.png in Resources */,
 				79A6D24A1E31353600EBCD2F /* wallet.png in Resources */,
 				32D645491E1F7EBF000F15D9 /* Main.storyboard in Resources */,
 				79710C1A1E33EE3A001C9B8E /* theme.png in Resources */,
+				79A769371E37DA3D0056109F /* refer_earn_pic.png in Resources */,
 				79710C261E33EEAF001C9B8E /* refer_earn.png in Resources */,
 				79710C241E33EEA2001C9B8E /* like_us.png in Resources */,
 			);
@@ -826,6 +860,7 @@
 				79710C621E3401BD001C9B8E /* PrivacyPolicyTableViewCell.m in Sources */,
 				795CE4641E2D3C7D0041A885 /* AMSlideMenuLeftMenuSegue.m in Sources */,
 				795CE4661E2D3C7D0041A885 /* AMSlideMenuMainViewController.m in Sources */,
+				79A7693F1E3A57E60056109F /* Reachability.m in Sources */,
 				795CE4721E2D44D60041A885 /* TKFirstViewController.m in Sources */,
 				79710C411E3400CD001C9B8E /* InternationalTableViewCell.m in Sources */,
 				79E3BC2C1E372817001FF2CB /* TKWalletViewController.m in Sources */,
@@ -848,6 +883,7 @@
 				79710C501E340136001C9B8E /* ReferTableViewCell.m in Sources */,
 				32D645461E1F7EBF000F15D9 /* ViewController.m in Sources */,
 				795CE4521E2D3C010041A885 /* TKHomeViewController.m in Sources */,
+				79A7693A1E37DB190056109F /* TKReferViewController.m in Sources */,
 				79A6D2561E31596700EBCD2F /* FlashSaleTableViewCell.m in Sources */,
 				792DCC4C1E2D735A00BE5867 /* DetailTableViewCell.m in Sources */,
 				79710C531E340150001C9B8E /* OthersTableViewCell.m in Sources */,

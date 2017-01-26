@@ -8,9 +8,13 @@
 
 #import "TKSearchBudgetViewController.h"
 #import "TKFirstViewController.h"
+#import "Utility.h"
 
-
-@interface TKSearchBudgetViewController ()
+@interface TKSearchBudgetViewController ()<UIWebViewDelegate>
+{
+    UIActivityIndicatorView *activityIndicator;
+    
+}
 @property (weak, nonatomic) IBOutlet UIWebView *homeWebView;
 
 @end
@@ -50,17 +54,64 @@
     NSString *userID    = [prefs stringForKey:@"userID"];
     NSString *userType  = [prefs stringForKey:@"User_type"];
 
-    
-    NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/search-budget-mobile.php?&type=%@&appuserid=%@",userType,userID];
-    
-    
-    //@"http://www.travkart.com/mobapp/index.php?mobileapp=1&type=agent&appuserid=324";
+    self.homeWebView.delegate   =   self;
     
     
-    NSURL *url = [NSURL URLWithString:fullURL];
-    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-    [self.homeWebView loadRequest:requestObj];
+   
+    
+    if ([Utility reachable]) {
+        
+        NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/search-budget-mobile.php?&type=%@&appuserid=%@",userType,userID];
+        
+        
+        //@"http://www.travkart.com/mobapp/index.php?mobileapp=1&type=agent&appuserid=324";
+        
+        
+        NSURL *url = [NSURL URLWithString:fullURL];
+        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+        [self.homeWebView loadRequest:requestObj];
+        
+    }
+    else{
+        
+        CGRect frame = [self.homeWebView frame];
+        UIImageView *noInternet =   [[UIImageView alloc] initWithFrame:frame];
+        noInternet.image    =   [UIImage imageNamed:@"no_connection_tower.jpg"];
+        [self.view addSubview:noInternet];
+        
+    }
+
+    
 }
+
+
+
+- (void)webViewDidStartLoad:(UIWebView *)webView;
+{
+    //self.activityLoaderView.hidden  =   NO;
+    
+    activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [activityIndicator setColor:[UIColor orangeColor]];
+    
+    activityIndicator.frame = CGRectMake(200.0, 200.0, 100.0, 40.0);
+    activityIndicator.center = self.view.center;
+    [self.view addSubview: activityIndicator];
+    [self.view bringSubviewToFront:activityIndicator];
+    
+    [activityIndicator startAnimating];
+    //[self.webLoader startAnimating];
+}
+- (void)webViewDidFinishLoad:(UIWebView *)webView;
+{
+    
+    //self.activityLoaderView.hidden  =   NO;
+    //[self.webLoader stopAnimating];
+    
+    activityIndicator.hidden    =   YES;
+    
+}
+
+
 
 
 - (void)didReceiveMemoryWarning {

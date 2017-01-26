@@ -9,5 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface TKWalletViewController : UIViewController
+- (IBAction)walletControl:(id)sender;
+- (IBAction)walletBtns:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *addMoney;
+@property (weak, nonatomic) IBOutlet UIButton *travcash;
+@property (weak, nonatomic) IBOutlet UIButton *transactions;
 
 @end

@@ -16,15 +16,17 @@
 
 @implementation Utility
 
-//+(BOOL)reachable
-//{
-//    Reachability *r                 = [Reachability reachabilityWithHostName:@"google.com"];
-//    NetworkStatus internetStatus    = [r currentReachabilityStatus];
-//    if(internetStatus == NotReachable) {
-//        return NO;
-//    }
-//    return YES;
-//}
+
+
++(BOOL)reachable
+{
+    Reachability *r                 = [Reachability reachabilityWithHostName:@"google.com"];
+    NetworkStatus internetStatus    = [r currentReachabilityStatus];
+    if(internetStatus == NotReachable) {
+        return NO;
+    }
+    return YES;
+}
 
 
 

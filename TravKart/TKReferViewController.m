@@ -1,39 +1,65 @@
 //
-//  TKRequestCallViewController.m
+//  TKReferViewController.m
 //  TravKart
 //
-//  Created by AMJITH  on 24/01/17.
+//  Created by AMJITH  on 25/01/17.
 //  Copyright © 2017 Dunamis. All rights reserved.
 //
 
-#import "TKRequestCallViewController.h"
+#import "TKReferViewController.h"
 #import "XMLReader.h"
 #import "Constants.pch"
 #import "Utility.h"
 
-@interface TKRequestCallViewController ()
+@interface TKReferViewController ()
 {
     NSMutableData *xmlData;
-    
 }
-@property (weak, nonatomic) IBOutlet UITextField *userName;
-@property (weak, nonatomic) IBOutlet UITextField *userMObile;
-@property (weak, nonatomic) IBOutlet UITextField *userCode;
+@property (weak, nonatomic) IBOutlet UITextField *friend_name;
+@property (weak, nonatomic) IBOutlet UITextField *email_ID;
+@property (weak, nonatomic) IBOutlet UITextField *country;
+@property (weak, nonatomic) IBOutlet UITextField *mobile;
 
 @end
 
-@implementation TKRequestCallViewController
+@implementation TKReferViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
-- (IBAction)submitRequest:(id)sender {
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)backBtnAction:(id)sender {
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"OpenSideMenuNotification" object:self];
+    
+
+}
+
+- (IBAction)sendToServer:(id)sender {
+    
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    // getting an NSString
+    NSString *userID    = [prefs stringForKey:@"userID"];
+    NSString *userType  = [prefs stringForKey:@"User_type"];
+    
+    NSString *referVal  =   @"";
+    if ([userType isEqualToString:@"agent"]) {
+        referVal    =   @"0";
+    }
+    else{
+        referVal    =   @"1";
+    }
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc]
                                     initWithURL:[NSURL
-                                                 URLWithString:callBackUrl]];
+                                                 URLWithString:refer]];
     
     [request setHTTPMethod:@"POST"];
     [request setValue:@"text/xml"
@@ -51,12 +77,9 @@
     //    "</senddata>"
     //
     
+    NSString *xmlString = [NSString stringWithFormat:@"<senddata><userid>%@</userid><type>%@</type><refer>%@</refer><email>%@</email><name>%@</name><mobile>%@</mobile></senddata>",userID,referVal,referVal,_email_ID.text,_friend_name.text,_mobile.text];
     
     if ([Utility reachable]) {
-        NSString *mobNo =   [NSString stringWithFormat:@"%@,%@",_userCode.text,_userMObile.text ];
-        
-        NSString *xmlString = [NSString stringWithFormat:@"<senddata><name>%@</name><mobno>%@</mobno></senddata>",_userName.text,mobNo];
-        
         [request setValue:[NSString stringWithFormat:@"%lu",
                            (unsigned long)[xmlString length]]
        forHTTPHeaderField:@"Content-length"];
@@ -65,7 +88,6 @@
                               dataUsingEncoding:NSUTF8StringEncoding]];
         
         NSURLConnection *con=[NSURLConnection connectionWithRequest:request delegate:self];
-        
 
     }
     else{
@@ -77,6 +99,7 @@
     }
     
 }
+
 
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
@@ -94,15 +117,8 @@
     NSError *error1;
     NSDictionary *dict=[XMLReader dictionaryForXMLData:xmlData error:&error1];
     
-    if (dict == nil) {
-        
-    }
-    else{
-        
-        NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
-        //[userArray addObject:[dict objectForKey:@"USERRESULT"]];
-        
-    }
+    NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
+    //[userArray addObject:[dict objectForKey:@"USERRESULT"]];
     
     
     //    //NSString *valueToSave = @"someValue";
@@ -135,16 +151,6 @@
     
     NSLog(@"%@", dict);
     
-}
-
-
-- (IBAction)backBtnAction:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 /*

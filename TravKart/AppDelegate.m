@@ -84,15 +84,29 @@
     
     return YES;
 }
+
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary *)options {
+    return [[GIDSignIn sharedInstance] handleURL:url
+                               sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                                      annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+}
+
+
 //
-//- (BOOL)application:(UIApplication *)application
-//            openURL:(NSURL *)url
-//            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+//- (BOOL)application:(nonnull UIApplication *)application
+//            openURL:(nonnull NSURL *)url
+//            options:(nonnull NSDictionary<NSString *, id> *)options {
 //    
-//    return [[FBSDKApplicationDelegate sharedInstance] application:application
-//                                                          openURL:url
-//                                                          options:options];
+//    
+//    return [[GIDSignIn sharedInstance] handleURL:url
+//                               sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+//                                      annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+//    
+//    
 //}
+
 
 
 - (void)loginButton:(FBSDKLoginButton *)loginButton
@@ -102,30 +116,30 @@ didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
 
 
 }
-
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options {
-    
-    if([[url scheme] isEqualToString:@"fb664458543711906"])
-
-    return [[FBSDKApplicationDelegate sharedInstance] application:app
-                                                          openURL:url
-                                                sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-                                                       annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
-
-    else if ([[url scheme] isEqualToString:@"com.googleusercontent.apps.267540738096-ciqdbm89u6tssos5uku3sqpvm6cgtd52"])
-    {
-        return [[GIDSignIn sharedInstance] handleURL:url
-                                   sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-                                          annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
-
-    }
-    
-    
-    else{
-        return NO;
-    }
-}
-
+//
+//- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options {
+//    
+//    if([[url scheme] isEqualToString:@"fb664458543711906"])
+//
+//    return [[FBSDKApplicationDelegate sharedInstance] application:app
+//                                                          openURL:url
+//                                                sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+//                                                       annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+//
+//    else if ([[url scheme] isEqualToString:@"com.googleusercontent.apps.267540738096-sejd9tbku8f2iudrnvtc0d925juhmdbm"])
+//    {
+//        return [[GIDSignIn sharedInstance] handleURL:url
+//                                   sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+//                                          annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+//
+//    }
+//    
+//    
+//    else{
+//        return NO;
+//    }
+//}
+//
 
 //- (BOOL)application:(nonnull UIApplication *)application
 //            openURL:(nonnull NSURL *)url
@@ -147,21 +161,29 @@ didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
 
-    if([[GIDSignIn sharedInstance] handleURL:url
-                           sourceApplication:sourceApplication
-                                  annotation:annotation])
-    {
-        return YES;
-    }
-    else if([[FBSDKApplicationDelegate sharedInstance] application:application
-                                                           openURL:url
-                                                 sourceApplication:sourceApplication
-                                                        annotation:annotation
-             ])
-    {
-        return  YES;
-    }
-    return NO;
+    BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                                  openURL:url
+                                                        sourceApplication:sourceApplication
+                                                               annotation:annotation
+                    ];
+    // Add any custom logic here.
+    return handled;
+    
+//    if([[GIDSignIn sharedInstance] handleURL:url
+//                           sourceApplication:sourceApplication
+//                                  annotation:annotation])
+//    {
+//        return YES;
+//    }
+//    else if([[FBSDKApplicationDelegate sharedInstance] application:application
+//                                                           openURL:url
+//                                                 sourceApplication:sourceApplication
+//                                                        annotation:annotation
+//             ])
+//    {
+//        return  YES;
+//    }
+//    return NO;
 }
 
 - (void)signIn:(GIDSignIn *)signIn
@@ -187,19 +209,20 @@ didSignInForUser:(GIDGoogleUser *)user
         [[FIRAuth auth] signInWithCredential:credential
                                   completion:^(FIRUser *user, NSError *error) {
                                       // ...
-                                      if (error) {
+                                      if (!error) {
                                           // ...
                                           NSLog(@"%@",user.displayName);
+                                          NSDictionary *statusText = @{@"statusText":
+                                                                           [NSString stringWithFormat:@"Signed in user: %@",
+                                                                            fullName]};
+                                          [[NSNotificationCenter defaultCenter]
+                                           postNotificationName:@"ToggleAuthUINotification"
+                                           object:nil
+                                           userInfo:statusText];
                                           return;
                                       }}] ;
 
-        NSDictionary *statusText = @{@"statusText":
-                                         [NSString stringWithFormat:@"Signed in user: %@",
-                                          fullName]};
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:@"ToggleAuthUINotification"
-         object:nil
-         userInfo:statusText];
+       
 
         // ...
     }
@@ -284,7 +307,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
         NSLog(@"%@", userInfo);
         _dict=userInfo;
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
-        ViewController *lvc = [storyboard instantiateViewControllerWithIdentifier:@"CDRV"];
+        ViewController *lvc = [storyboard instantiateViewControllerWithIdentifier:@"GoToMainViewController"];
         lvc.userinfodata=_dict;
         [(UINavigationController *)self.window.rootViewController pushViewController:lvc animated:NO];
     }

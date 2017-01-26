@@ -9,10 +9,13 @@
 #import "RegistrationViewController.h"
 #import "Constants.pch"
 #import "XMLReader.h"
+#import "Utility.h"
 @interface RegistrationViewController ()<NSURLConnectionDelegate>
 {
     NSMutableData *xmlData;
-
+    UITextField *otpField;
+    NSString *otpTmp;
+    NSMutableArray *userArray;
 }
 @property (weak, nonatomic) IBOutlet UITextField *firtsName;
 @property (weak, nonatomic) IBOutlet UITextField *secondName;
@@ -38,20 +41,34 @@
                                     initWithURL:[NSURL
                                                  URLWithString:@RegisterUrl]];
     
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"text/xml"
-   forHTTPHeaderField:@"Content-type"];
-    
-    NSString *xmlString = [NSString stringWithFormat:@"<logdata><Firstname>%@</Firstname><Lastname>%@</Lastname><Reference>%@</Reference><Email>%@</Email><Number>%@</Number><password>%@</password></logdata>",_firtsName,_secondName,_referCode,_email,_mobile,_password];
-    
-    [request setValue:[NSString stringWithFormat:@"%lu",
-                       (unsigned long)[xmlString length]]
-   forHTTPHeaderField:@"Content-length"];
-    
-    [request setHTTPBody:[xmlString
-                          dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSURLConnection *con=[NSURLConnection connectionWithRequest:request delegate:self];
+    if ([Utility reachable]) {
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"text/xml"
+       forHTTPHeaderField:@"Content-type"];
+        
+        
+        
+        NSString *xmlString = [NSString stringWithFormat:@"<logdata><Firstname>%@</Firstname><Lastname>%@</Lastname><Reference>%@</Reference><Email>%@</Email><Number>%@</Number><password>%@</password></logdata>",_firtsName.text,_secondName.text,_referCode.text,_email.text,_mobile.text,_password.text];
+        
+        [request setValue:[NSString stringWithFormat:@"%lu",
+                           (unsigned long)[xmlString length]]
+       forHTTPHeaderField:@"Content-length"];
+        
+        [request setHTTPBody:[xmlString
+                              dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSURLConnection *con=[NSURLConnection connectionWithRequest:request delegate:self];
+
+    }
+    else{
+        
+        
+        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Please check your internet coneectivity" delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil];
+        [alert show];
+        
+
+        
+    }
     
     
 }
@@ -71,40 +88,86 @@
     NSError *error1;
     NSDictionary *dict=[XMLReader dictionaryForXMLData:xmlData error:&error1];
     
-    NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
-    [userArray addObject:[dict objectForKey:@"USERRESULT"]];
-    
-    
-    //NSString *valueToSave = @"someValue";
-    [[NSUserDefaults standardUserDefaults] setObject:@"guest" forKey:@"User_type"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] forKey:@"agentID"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"MARKUPCLASS"] forKey:@"markupclass"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USEREMAIL"] forKey:@"usermail"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERMOBILE"]  forKey:@"usermobile"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERNAME"] forKey:@"username"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERPHONE"] forKey:@"userphone"];
-    [[NSUserDefaults standardUserDefaults] setObject:   [[userArray objectAtIndex:0]valueForKey:@"USERPHOTO"] forKey:@"userphoto"];
-    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"is_master_user"] forKey:@"is_master_user"];
-    
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    
-    
-    if ([[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] isEqualToString:@"0"]) {
+    if (!(dict == nil)) {
         
-        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Invalid Username or Password" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
-        [alert show];
-    }
-    else{
-        
-        [self performSegueWithIdentifier:@"GoToMainViewController" sender:self];
-        
-    }
+        userArray   =   [[NSMutableArray alloc] init];
+        [userArray addObject:[dict objectForKey:@"SMSRESULT"]];
+//        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+//        
+        UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:@"Enter OTP" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+        [dialog setAlertViewStyle:UIAlertViewStylePlainTextInput];
 
+//        [dialog setDelegate:self];
+//        [dialog setTitle:@"Enter OTP"];
+//        [dialog setMessage:@" "];
+//        [dialog addButtonWithTitle:@"Cancel"];
+//        [dialog addButtonWithTitle:@"OK"];
+        
+//        otpField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, 45.0, 245.0, 25.0)];
+//        [otpField setBackgroundColor:[UIColor grayColor]];
+//        [dialog addSubview:otpField];
+        [dialog show];
+
+        CGAffineTransform moveUp = CGAffineTransformMakeTranslation(0.0, 100.0);
+        [dialog setTransform: moveUp];
+
+    }
+//    NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
+//    [userArray addObject:[dict objectForKey:@"USERRESULT"]];
+//    
+//    
+//    //NSString *valueToSave = @"someValue";
+//    [[NSUserDefaults standardUserDefaults] setObject:@"guest" forKey:@"User_type"];
+//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] forKey:@"agentID"];
+//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"MARKUPCLASS"] forKey:@"markupclass"];
+//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USEREMAIL"] forKey:@"usermail"];
+//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
+//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERMOBILE"]  forKey:@"usermobile"];
+//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERNAME"] forKey:@"username"];
+//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERPHONE"] forKey:@"userphone"];
+//    [[NSUserDefaults standardUserDefaults] setObject:   [[userArray objectAtIndex:0]valueForKey:@"USERPHOTO"] forKey:@"userphoto"];
+//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"is_master_user"] forKey:@"is_master_user"];
+//    
+//    [[NSUserDefaults standardUserDefaults] synchronize];
+//    
+//    
+//    
+//    if ([[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] isEqualToString:@"0"]) {
+//        
+//        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Invalid Username or Password" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
+//        [alert show];
+//    }
+//    else{
+//        
+//        [self performSegueWithIdentifier:@"GoToMainViewController" sender:self];
+//        
+//    }
+//
+//    
+//    NSLog(@"%@", dict);
     
-    NSLog(@"%@", dict);
+}
+
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
+    NSString *strOtp    = [[userArray objectAtIndex:0]valueForKey:@"OTACODE"];
+    
+    if (buttonIndex == 1)
+    {
+        if ([[[alertView textFieldAtIndex:0]text] isEqualToString:strOtp ]) {
+            
+            [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
+            [[NSUserDefaults standardUserDefaults] setObject:[ self.email.text valueForKey:@"USEREMAIL"] forKey:@"usermail"];
+            [[NSUserDefaults standardUserDefaults] setObject:[ self.firtsName.text valueForKey:@"USERNAME"] forKey:@"username"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+
+            [self.navigationController popViewControllerAnimated:NO];
+            NSLog(@"loginSuccess!");
+            
+        }
+    }
 }
 
 

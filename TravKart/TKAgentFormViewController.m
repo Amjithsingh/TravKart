@@ -7,6 +7,7 @@
 //
 
 #import "TKAgentFormViewController.h"
+#import "Utility.h"
 
 @interface TKAgentFormViewController ()
 @property (weak, nonatomic) IBOutlet UIWebView *webViewForm;
@@ -19,11 +20,27 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    NSString *fullUrl       =   @"http://www.travkart.com/agent-signup-mobapp.php";
     
-    NSURL *url = [NSURL URLWithString:fullUrl];
-    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-    [self.webViewForm loadRequest:requestObj];
+    
+    
+    if ([Utility reachable]) {
+        
+        NSString *fullUrl       =   @"http://www.travkart.com/agent-signup-mobapp.php";
+        
+        NSURL *url = [NSURL URLWithString:fullUrl];
+        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+        [self.webViewForm loadRequest:requestObj];
+        
+    }
+    else{
+        
+        CGRect frame = [self.webViewForm frame];
+        UIImageView *noInternet =   [[UIImageView alloc] initWithFrame:frame];
+        noInternet.image    =   [UIImage imageNamed:@"no_connection_tower.jpg"];
+        [self.view addSubview:noInternet];
+        
+    }
+    
 }
 - (IBAction)closeAgentForm:(id)sender {
     [self.navigationController popViewControllerAnimated:NO];

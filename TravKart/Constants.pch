@@ -12,6 +12,9 @@
 
 #define Login_Url   "http://www.travkart.com/xml_b2c_login.php"
 #define RegisterUrl "http://www.travkart.com/xml_b2c_register.php"
+#define callBackUrl @"http://www.travkart.com/xml_request_callback.php"
+#define sendEnquiry @"http://www.travkart.com/xml_send_enquiry.php"
+#define refer    @"http://www.travkart.com/xml_refer.php"
 //#define Home_WebView ""
 
 // Include any system framework and library headers here that should be included in all compilation units.
