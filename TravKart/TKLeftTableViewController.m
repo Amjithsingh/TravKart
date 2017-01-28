@@ -29,6 +29,7 @@
 #import "AboutUsTableViewCell.h"
 #import "TermsConditionsTableViewCell.h"
 #import "PrivacyPolicyTableViewCell.h"
+#import "Utility.h"
 
 @import Firebase;
 
@@ -198,13 +199,16 @@
 
 -(void)favoritesAction{
 
+    [Utility addtoplist:@"112" key:@"index" plist:@"TravKart_Info"];
+
     [self performSegueWithIdentifier:@"common_Identifier" sender:self];
 
 }
 
 -(void)bookAction
 {
-    
+    [Utility addtoplist:@"111" key:@"index" plist:@"TravKart_Info"];
+
     [self performSegueWithIdentifier:@"common_Identifier" sender:self];
 
     
@@ -260,7 +264,7 @@
         
         UITapGestureRecognizer *tappedBook = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bookAction)];
         tappedBook.numberOfTapsRequired = 1;
-        [cell.favorites addGestureRecognizer:tappedBook];
+        [cell.bookings addGestureRecognizer:tappedBook];
         
         
         if ([FIRAuth auth].currentUser) {
@@ -291,7 +295,7 @@
 //            [cell.userImage addGestureRecognizer:tapped];
         }
         else {
-            cell.userName.text =   @"Guest";
+            cell.userName.text =   @"Login";
             
             // No user is signed in.
             // ...

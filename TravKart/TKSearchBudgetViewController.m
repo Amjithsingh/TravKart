@@ -10,7 +10,7 @@
 #import "TKFirstViewController.h"
 #import "Utility.h"
 
-@interface TKSearchBudgetViewController ()<UIWebViewDelegate>
+@interface TKSearchBudgetViewController ()<UIWebViewDelegate,UITextFieldDelegate>
 {
     UIActivityIndicatorView *activityIndicator;
     

@@ -9,7 +9,7 @@
 #import "TKSecondViewController.h"
 #import "TKFirstViewController.h"
 #import "Utility.h"
-@interface TKSecondViewController ()<UIWebViewDelegate>
+@interface TKSecondViewController ()<UIWebViewDelegate,UITextFieldDelegate>
 {
     UIActivityIndicatorView *activityIndicator;
 }
@@ -81,7 +81,11 @@
 }
 
 
-
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
+}
 
 - (void)webViewDidStartLoad:(UIWebView *)webView;
 {

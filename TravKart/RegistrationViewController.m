@@ -10,7 +10,7 @@
 #import "Constants.pch"
 #import "XMLReader.h"
 #import "Utility.h"
-@interface RegistrationViewController ()<NSURLConnectionDelegate>
+@interface RegistrationViewController ()<NSURLConnectionDelegate,UITextFieldDelegate>
 {
     NSMutableData *xmlData;
     UITextField *otpField;
@@ -30,9 +30,26 @@
 
 @implementation RegistrationViewController
 
+
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    
+    
+    self.firtsName.delegate     =   self;
+    self.secondName.delegate    =   self;
+    self.referCode.delegate     =   self;
+    _promoCOde.delegate  =   self;
+    _email.delegate     =   self;
+    _mobile.delegate     =   self;
+    _password.delegate     =   self;
+    _confirmPassword.delegate     =   self;
 }
 - (IBAction)postRegisterDetails:(id)sender {
     

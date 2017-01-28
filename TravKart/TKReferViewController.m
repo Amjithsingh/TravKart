@@ -11,7 +11,7 @@
 #import "Constants.pch"
 #import "Utility.h"
 
-@interface TKReferViewController ()
+@interface TKReferViewController ()<UITextFieldDelegate>
 {
     NSMutableData *xmlData;
 }
@@ -27,7 +27,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.friend_name.delegate   =   self;
+    self.email_ID.delegate  =   self;
+    self.country.delegate   =   self;
+    self.mobile.delegate    =   self;
 }
+
+
+
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -1141,6 +1141,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TravKart/TravKart.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = 2QBYT7MPZA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1261,8 +1262,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hbs.TravKart;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0002ff58-d512-42ba-845f-8ba118c10156";
-				PROVISIONING_PROFILE_SPECIFIER = TravKartDev;
+				PROVISIONING_PROFILE = "b843103c-003c-40f1-b1a3-58ce3276315e";
+				PROVISIONING_PROFILE_SPECIFIER = TravKart_Dist;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Release;

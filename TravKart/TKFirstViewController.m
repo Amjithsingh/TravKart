@@ -14,7 +14,7 @@
 @import GoogleSignIn;
 @import FirebaseAuth;
 
-@interface TKFirstViewController ()<UIWebViewDelegate>
+@interface TKFirstViewController ()<UIWebViewDelegate,UITextFieldDelegate>
 {
     UIActivityIndicatorView* activityIndicator;
 }
@@ -31,6 +31,11 @@
     // Do any additional setup after loading the view.
     
     [self addLeftMenuButton];
+}
+- (IBAction)callAction:(id)sender {
+    
+    NSString *phoneNumber = [@"tel://" stringByAppendingString:@"+918010038038"];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
 }
 - (IBAction)floatingBtnAction:(id)sender {
     
@@ -160,7 +165,11 @@
     
 }
 
-
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
+}
 
 - (IBAction)loginOrLogout:(id)sender {
     

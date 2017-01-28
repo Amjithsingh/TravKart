@@ -21,13 +21,12 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.267540738096-sejd9tbku8f2iudrnvtc0d925juhmdbm</string>
 			</array>
-             <key>CFBundleURLName</key>
-             <string></string>
-
 		</dict>
 		<dict>
 			<key>CFBundleURLSchemes</key>
@@ -37,7 +36,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>FacebookAppID</key>
 	<string>664458543711906</string>
 	<key>FacebookDisplayName</key>
@@ -50,16 +49,7 @@
 		<string>fb-messenger-api</string>
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
-<!--        <string>com.hbs.TravKart</string>-->
-<!--        <string>com.googleusercontent.apps.267540738096-sejd9tbku8f2iudrnvtc0d925juhmdbm</string>-->
-<!--        <string>com-google-gidconsent-google</string>-->
-<!--        <string>com-google-gidconsent-youtube</string>-->
-<!--        <string>com-google-gidconsent</string>-->
-<!--        <string>com.google.gppconsent.2.4.1</string>-->
-<!--        <string>com.google.gppconsent.2.4.0</string>-->
-<!--        <string>googlechrome</string>-->
-<!--        <string>googlechrome-x-callback</string>-->
-    </array>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

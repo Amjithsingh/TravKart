@@ -13,7 +13,7 @@
 
 
 
-@interface TKCommonViewController ()<UIWebViewDelegate>
+@interface TKCommonViewController ()<UIWebViewDelegate,UITextFieldDelegate>
 {
     UIActivityIndicatorView *activityIndicator;
 }
@@ -46,7 +46,11 @@
 //    TKFirstViewController *vc = [segue destinationViewController];
 //}
 
-
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -76,14 +80,20 @@
         case 111:
             self.titleLabel.text    =   @"My Bookings";
             urlString   =   [NSString stringWithFormat:@"http://www.travkart.com/mobapp/my_bookings_app.php?&type=%@&appuserid=%@",userType,userID];
+            break;
+
         
         case  112:
             self.titleLabel.text    =   @"Favorites";
             urlString   =   [NSString stringWithFormat:@"http://www.travkart.com/mobapp/my_favourites.php?&type=%@&appuserid=%@",userType,userID];
+            break;
+
             
         case 0:
             self.titleLabel.text    =   @"My Profile";
             urlString   =  [NSString stringWithFormat:@"http://www.travkart.com/mobapp/edit-my-profile.php?&type=%@&appuserid=%@",userType,userID];
+            break;
+
         case 7:
             
             self.titleLabel.text    =   @"Theme Holidays";

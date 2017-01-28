@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<UITextFieldDelegate>
 @property (nonatomic, retain) NSDictionary *userinfodata;
 @property (weak, nonatomic) IBOutlet UITextField *emailID_txt;
 @property (weak, nonatomic) IBOutlet UITextField *userID_txt;

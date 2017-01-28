@@ -10,7 +10,7 @@
 #import "TKFirstViewController.h"
 #import "Utility.h"
 
-@interface TKOffersViewController ()
+@interface TKOffersViewController ()<UITextFieldDelegate>
 {
     UIActivityIndicatorView *activityIndicator;
 }
@@ -23,6 +23,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
 }
 
 - (IBAction)backButtonAction:(id)sender {

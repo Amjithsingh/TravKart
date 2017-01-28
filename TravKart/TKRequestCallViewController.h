@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TKRequestCallViewController : UIViewController
+@interface TKRequestCallViewController : UIViewController<UITextFieldDelegate>
 
 @end

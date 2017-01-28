@@ -82,6 +82,9 @@ GIDSignInUIDelegate,NSURLConnectionDelegate,FBSDKLoginButtonDelegate>
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skipActionHandler:) name:@"pushtoHomeVC" object:nil];
     
     
+    self.emailID_txt.delegate   =   self;
+    self.userID_txt.delegate    =   self;
+    
     //[GIDSignIn sharedInstance].uiDelegate = self;
     //[[GIDSignIn sharedInstance] signIn];
     
@@ -686,6 +689,14 @@ didSignInForUser:(GIDGoogleUser *)user
 //                                  return;
 //                              }}]
 // 
+
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
+}
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

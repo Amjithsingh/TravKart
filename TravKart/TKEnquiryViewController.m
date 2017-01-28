@@ -11,7 +11,7 @@
 #import "XMLReader.h"
 #import "Utility.h"
 
-@interface TKEnquiryViewController ()
+@interface TKEnquiryViewController ()<UITextFieldDelegate>
 {
     NSString *date;
     NSMutableData *xmlData;
@@ -23,14 +23,54 @@
 @property (weak, nonatomic) IBOutlet UITextField *destination;
 @property (weak, nonatomic) IBOutlet UITextField *extra;
 @property (weak, nonatomic) IBOutlet UIDatePicker *pickDate;
+@property (weak, nonatomic) IBOutlet UITextField *dateText;
+@property (weak, nonatomic) IBOutlet UIView *popUpDateView;
 
 @end
 
 @implementation TKEnquiryViewController
 
+
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
+}
+
+
+- (IBAction)pickDate:(id)sender {
+
+    self.pickDate.hidden    =   NO;
+}
+
+- (IBAction)finishedPickingDate:(id)sender {
+    
+    
+    date = [NSString stringWithFormat:@"%@",_pickDate.date];
+    _dateText.text  =   [date substringToIndex:13];
+    
+}
+
+
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    _name.delegate   =   self;
+    _contactNumber.delegate  =   self;
+    _email.delegate  =   self;
+    _residence.delegate  =   self;
+    _destination.delegate    =   self;
+    _extra.delegate  =   self;
+    _dateText.delegate   =   self;
+    
+    
+}
+- (IBAction)backBtnAction:(id)sender {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"OpenSideMenuNotification" object:self];
+
 }
 - (IBAction)sendToServer:(id)sender {
     

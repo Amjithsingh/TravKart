@@ -134,11 +134,11 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;
 {
     
-    CGRect frame = [self.walletWebView frame];
-    UIImageView *noInternet =   [[UIImageView alloc] initWithFrame:frame];
-    noInternet.image    =   [UIImage imageNamed:@"no_connection_tower.jpg"];
-    [self.view addSubview:noInternet];
-    
+//    CGRect frame = [self.walletWebView frame];
+//    UIImageView *noInternet =   [[UIImageView alloc] initWithFrame:frame];
+//    noInternet.image    =   [UIImage imageNamed:@"no_connection_tower.jpg"];
+//    [self.view addSubview:noInternet];
+//    
 
 }
 

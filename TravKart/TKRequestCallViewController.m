@@ -22,11 +22,28 @@
 
 @end
 
+
+
 @implementation TKRequestCallViewController
+
+
+
+
+
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.userName.delegate  =   self;
+    self.userCode.delegate  =   self;
+    self.userCode.delegate  =   self;
 }
 - (IBAction)submitRequest:(id)sender {
     
