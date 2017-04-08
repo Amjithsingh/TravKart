@@ -35,8 +35,8 @@
     
     if ([Utility reachable]) {
         
-        NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/add_cash_app_new.php?&type=%@&appuserid=%@",userType,userID];
-        
+      
+        NSString* fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/travcash-transactions-apps.php?&type=%@&appuserid=%@",userType,userID];
         
         NSURL *url = [NSURL URLWithString:fullURL];
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
@@ -72,7 +72,7 @@
 
     
     
-    if (selectedSegment == 0) {
+    if (selectedSegment == 1) {
         //toggle the correct view to be visible
         
         //http://www.travkart.com/mobapp/add_cash_app_new.php?&type=”user_type”&appuserid=”user_id”
@@ -82,7 +82,7 @@
         
         
     }
-    else if(selectedSegment == 1){
+    else if(selectedSegment == 0){
         //toggle the correct view to be visible
         
         fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/travcash-transactions-apps.php?&type=%@&appuserid=%@",userType,userID];
@@ -92,7 +92,7 @@
     else
     {
         
-        NSString *fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/wallet-transactions-apps.php?&type=%@&appuserid=%@",userType,userID];
+        fullURL = [NSString stringWithFormat:@"http://www.travkart.com/mobapp/wallet-transactions-apps.php?&type=%@&appuserid=%@",userType,userID];
         
     }
     
