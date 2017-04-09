@@ -11,6 +11,10 @@
 #import <Google/SignIn.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import "TKHomeViewController.h"
+#import "Utility.h"
+#import "TKNotificationsViewController.h"
+
 
 @interface AppDelegate ()
 
@@ -27,7 +31,8 @@
     // Override point for customization after application launch.
     
     
-    
+    [ZDCChat initializeWithAccountKey:@"37G3HFs6cdd9tADzMq7vVzciCZXLLx4P"];
+
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
         // iOS 7.1 or earlier
         UIRemoteNotificationType allNotificationTypes =
@@ -94,6 +99,25 @@
 }
 
 
+
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
+    // for development
+    //[[FIRInstanceID instanceID] setAPNSToken:deviceToken type:FIRInstanceIDAPNSTokenTypeSandbox];
+    
+    // for production
+    [[FIRInstanceID instanceID] setAPNSToken:deviceToken type:FIRInstanceIDAPNSTokenTypeProd];
+    
+    
+}
+
+
+-(void) application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    NSLog(@"error in registering for remote notification %@",error.localizedDescription);
+    
+}
 //
 //- (BOOL)application:(nonnull UIApplication *)application
 //            openURL:(nonnull NSURL *)url
@@ -274,22 +298,59 @@ didDisconnectWithUser:(GIDGoogleUser *)user
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     
-    
     UIApplicationState state = [application applicationState];
     
     if (state == UIApplicationStateActive) {
-//        CWStatusBarNotification *notification = [CWStatusBarNotification new];
-//        notification.notificationAnimationInStyle=CWNotificationAnimationStyleTop;
-//        notification.notificationAnimationOutStyle=CWNotificationAnimationStyleTop;
-//        notification.notificationStyle=CWNotificationStyleNavigationBarNotification;
-//        notification.notificationLabelBackgroundColor = [UIColor blackColor ];
-//        notification.notificationLabelTextColor = [UIColor whiteColor];
+        CWStatusBarNotification *notification = [CWStatusBarNotification new];
+        notification.notificationAnimationInStyle=CWNotificationAnimationStyleTop;
+        notification.notificationAnimationOutStyle=CWNotificationAnimationStyleTop;
+        notification.notificationStyle=CWNotificationStyleNavigationBarNotification;
+        notification.notificationLabelBackgroundColor = [UIColor blackColor ];
+        notification.notificationLabelTextColor = [UIColor whiteColor];
 //        NSDictionary *dict1=[userInfo objectForKey:@"aps"];
 //        NSDictionary *dict2=[dict1 objectForKey:@"alert"];
-//        NSString *str=[dict2 objectForKey:@"title"];
+//        NSString *str = dict2;
 //        NSString *str2=[dict2 objectForKey:@"body"];
-//        [notification displayNotificationWithMessage:[NSString stringWithFormat:@"%@-%@",str,str2] forDuration:5.0f];
+        UIView *view = [[NSBundle mainBundle] loadNibNamed:@"NotificationView" owner:nil options:nil][0];
+       
+        [notification displayNotificationWithView:view
+                                 forDuration:10.0];;
+       
+       
+//        [notification displayNotificationWithView:view completion:^{
+//            notification.notificationTappedBlock    =   ^(void){
+//                
+//            }
+//            
+//        }];
+//        
+//        [self displayNotificationWithMessage:message completion:^{
+//            self.dismissHandle = perform_block_after_delay(duration, ^{
+//                [self dismissNotification];
+//            });
+//        }];
         
+//        }];
+       
+//        notification.notificationTappedBlock = ^(void) {
+//            NSLog(@"notification tapped");
+//            // more code here
+//        };
+//        [notification displayNotificationWithView:view completion:notification.notificationTappedBlock];
+//        
+//        
+        
+        
+//        __weak typeof(self) weakSelf = self;
+//        notification.notificationTappedBlock = ^(void) {
+//            if (!weakSelf.notificationIsDismissing) {
+//                [weakSelf dismissNotification];
+//                // more code here
+//            }
+//        };
+
+//        [notification displayNotificationWithMessage:[NSString stringWithFormat:@"this is a notification"] forDuration:5.0f];
+//
         
     }
     
@@ -302,16 +363,28 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
         // Print message ID.
         NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
         
+        NSDictionary    *dictTmp    =   [userInfo objectForKey:@"data"];
+        
+        NSString    *url    =   [userInfo objectForKey:@"notific_url"];
         
         // Pring full message.
         NSLog(@"%@", userInfo);
         _dict=userInfo;
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
-        ViewController *lvc = [storyboard instantiateViewControllerWithIdentifier:@"GoToMainViewController"];
-        lvc.userinfodata=_dict;
+        TKNotificationsViewController *lvc = [storyboard instantiateViewControllerWithIdentifier:@"notificationController"];
+        lvc.fromAppDelegate     =   YES;
+        lvc.NotificationUrl     =   url;
+        //lvc.userinfodata=_dict;
         [(UINavigationController *)self.window.rootViewController pushViewController:lvc animated:NO];
     }
 }
+
+//-(void) dismissNotification{
+//
+//    
+//}
+
+
 // [END receive_message]
 
 // [START refresh_token]
@@ -325,9 +398,82 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     // Connect to FCM since connection may have failed when attempted before having a token.
     [self connectToFcm];
     
+    [self sendDeviceDetailsForNotification];
     // TODO: If necessary send token to application server.
 }
 // [END refresh_token]
+
+
+-(void) sendDeviceDetailsForNotification{
+    
+    NSString* Identifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString]; // IOS 6+
+    NSString *refreshedToken = [[FIRInstanceID instanceID] token];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    // getting an NSString
+    NSString *userID    = [prefs stringForKey:@"userID"];
+    NSString *userType  = [prefs stringForKey:@"User_type"];
+    
+    
+    //                              userID
+    //    userType
+    //    tokenID
+    //    deviceID
+    //
+    
+    NSDictionary *foodDict  =   [[NSDictionary alloc] initWithObjectsAndKeys:Identifier,@"deviceID",refreshedToken,@"tokenID", userID,@"userID",userType,@"userType",  nil];
+    
+    if ([Utility reachable]) {
+        // 1
+        NSURL *url = [NSURL URLWithString:@"http://www.travkart.com/fcm_token_push.php"];
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+        
+        // 2
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+        request.HTTPMethod = @"POST";
+        
+        // 3
+        //NSDictionary *dictionary = @{@"key1": @"value1"};
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:foodDict
+                                                       options:kNilOptions error:&error];
+        
+        NSMutableString *urlString      =   [[NSMutableString alloc]initWithFormat:@"[%@]",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]];
+        
+        NSLog(@"result %@",urlString);
+        
+        NSData *postData                =   [urlString dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+        
+        
+        
+        if (!error) {
+            // 4
+            NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                                       fromData:postData completionHandler:^(NSData *data,NSURLResponse *response,NSError *error) {
+                                                                           
+                                                                           NSDictionary *result            =  [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                                                                           
+                                                                           NSLog(@"result %@",result);
+                                                                           
+                                                                           
+                                                                       }];
+            [uploadTask resume];
+            
+        }
+    }
+    else{
+        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Please check your internet coneectivity and try again!" delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil];
+        [alert show];
+        
+        
+    }
+    
+    
+}
+
+
+
 
 // [START connect_to_fcm]
 - (void)connectToFcm

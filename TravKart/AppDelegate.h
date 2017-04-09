@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "CWStatusBarNotification.h"
+#import <ZDCChat/ZDCChat.h>
 
 @import Firebase;
 @import FirebaseInstanceID;
 @import FirebaseMessaging;
 @import GoogleSignIn;
-
+//@import ZDCChat;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, GIDSignInDelegate>
 
@@ -25,7 +27,11 @@
 @property (readonly, strong) NSPersistentContainer *persistentContainer;
 @property(strong,nonatomic)             NSDictionary *dict;
 
+//@property (nonatomic) BOOL notificationIsDismissing;
+
+
 - (void)saveContext;
+//- (void)dismissNotification;
 
 
 @end

@@ -74,7 +74,13 @@
         {
             [Utility addtoplist:[NSString stringWithFormat:@"%ld",(long)indexPath.row] key:@"index" plist:@"TravKart_Info"];
             
-            [self performSegueWithIdentifier:segueIdentifier sender:self];
+            if (indexPath.row == 0) {
+                
+            }
+            else{
+                [self performSegueWithIdentifier:segueIdentifier sender:self];
+
+            }
         }
     }
 }

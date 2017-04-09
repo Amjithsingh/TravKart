@@ -30,6 +30,7 @@
 #import "TermsConditionsTableViewCell.h"
 #import "PrivacyPolicyTableViewCell.h"
 #import "Utility.h"
+#import "LogoutTableViewCell.h"
 
 @import Firebase;
 
@@ -194,26 +195,79 @@
 
 -(void) walletAction{
  
-    [self performSegueWithIdentifier:@"walletSegue" sender:self];
+    if ([userID  isEqual: @"0"]) {
+        [self performSegueWithIdentifier:@"loginvc" sender:self];
+        
+    }
+    else if (userID == nil)
+    {
+        [self performSegueWithIdentifier:@"loginvc" sender:self];
+    }
+    else{
+        [self performSegueWithIdentifier:@"walletSegue" sender:self];
+        
+    }
+
 }
 
 -(void)favoritesAction{
+    
+    if ([userID  isEqual: @"0"]) {
+        [self performSegueWithIdentifier:@"loginvc" sender:self];
+        
+    }
+    else if (userID == nil)
+    {
+        [self performSegueWithIdentifier:@"loginvc" sender:self];
+    }
+    else{
+        [Utility addtoplist:@"112" key:@"index" plist:@"TravKart_Info"];
+        
+        [self performSegueWithIdentifier:@"common_Identifier" sender:self];
+    }
 
-    [Utility addtoplist:@"112" key:@"index" plist:@"TravKart_Info"];
+    
 
-    [self performSegueWithIdentifier:@"common_Identifier" sender:self];
+}
 
+-(void)viewProfileAction
+{
+    if ([userID  isEqual: @"0"]) {
+        [self performSegueWithIdentifier:@"loginvc" sender:self];
+        
+    }
+    else if (userID == nil)
+    {
+        [self performSegueWithIdentifier:@"loginvc" sender:self];
+    }
+    else{
+        [Utility addtoplist:@"110" key:@"index" plist:@"TravKart_Info"];
+        
+        [self performSegueWithIdentifier:@"myprofile" sender:self];
+    }
 }
 
 -(void)bookAction
 {
-    [Utility addtoplist:@"111" key:@"index" plist:@"TravKart_Info"];
-
-    [self performSegueWithIdentifier:@"common_Identifier" sender:self];
-
     
-    
+    if ([userID  isEqual: @"0"]) {
+        [self performSegueWithIdentifier:@"loginvc" sender:self];
+        
+    }
+    else if (userID == nil)
+    {
+        [self performSegueWithIdentifier:@"loginvc" sender:self];
+    }
+    else{
+        
+        [Utility addtoplist:@"111" key:@"index" plist:@"TravKart_Info"];
+        
+        [self performSegueWithIdentifier:@"common_Identifier" sender:self];
+    }
+
 }
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -223,7 +277,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 //#warning Incomplete implementation, return the number of rows
-    return 21;
+    return 22;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
@@ -257,7 +311,8 @@
         tappedFav.numberOfTapsRequired = 1;
         [cell.favorites addGestureRecognizer:tappedFav];
         
-        
+        cell.userImage.layer.cornerRadius   =   8.0;
+
         
         cell.bookings.userInteractionEnabled = YES;
         cell.bookings.tag = indexPath.row;
@@ -266,6 +321,13 @@
         tappedBook.numberOfTapsRequired = 1;
         [cell.bookings addGestureRecognizer:tappedBook];
         
+        
+        cell.viewProfile.userInteractionEnabled =   YES;
+        cell.viewProfile.tag    =   indexPath.row;
+        UITapGestureRecognizer *viewProfileTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewProfileAction)];
+        viewProfileTap.numberOfTapsRequired = 1;
+        [cell.viewProfile addGestureRecognizer:viewProfileTap];
+       
         
         if ([FIRAuth auth].currentUser) {
             // User is signed in.
@@ -438,9 +500,16 @@
         return cell;
         
     }
+//    else if (indexPath.row == 2) {
+//        PrivacyPolicyTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TwentyFirstRowIdentifier" forIndexPath:indexPath];
+//        
+//        return cell;
+//        
+//    }
+
     else{
         
-        PrivacyPolicyTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TwentyFirstRowIdentifier" forIndexPath:indexPath];
+        LogoutTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TwentyTwoRowIdentifier" forIndexPath:indexPath];
         
         return cell;
 

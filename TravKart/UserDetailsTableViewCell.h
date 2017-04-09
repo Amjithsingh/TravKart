@@ -15,5 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *walletImg;
 @property (weak, nonatomic) IBOutlet UIImageView *favorites;
 @property (weak, nonatomic) IBOutlet UIImageView *bookings;
+@property (weak, nonatomic) IBOutlet UILabel *viewProfile;
 
 @end

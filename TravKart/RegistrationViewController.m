@@ -51,6 +51,23 @@
     _password.delegate     =   self;
     _confirmPassword.delegate     =   self;
 }
+
+-(BOOL) validateEmailId
+{
+    NSString *emailReg = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailReg];
+    
+    if ([emailTest evaluateWithObject:_email.text] == NO)
+    {
+        
+        return NO;
+        
+        
+    }
+    else{
+        return YES;
+    }
+}
 - (IBAction)postRegisterDetails:(id)sender {
     
     
@@ -73,9 +90,16 @@
         
         [request setHTTPBody:[xmlString
                               dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        NSURLConnection *con=[NSURLConnection connectionWithRequest:request delegate:self];
+        if ([self validateEmailId]) {
+            
+            NSURLConnection *con=[NSURLConnection connectionWithRequest:request delegate:self];
 
+        }
+        else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Please Enter Valid Email Address." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+            [alert show];
+
+        }
     }
     else{
         
@@ -111,59 +135,36 @@
         [userArray addObject:[dict objectForKey:@"SMSRESULT"]];
 //        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
 //        [[NSUserDefaults standardUserDefaults] synchronize];
-//        
-        UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:@"Enter OTP" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
-        [dialog setAlertViewStyle:UIAlertViewStylePlainTextInput];
-
-//        [dialog setDelegate:self];
-//        [dialog setTitle:@"Enter OTP"];
-//        [dialog setMessage:@" "];
-//        [dialog addButtonWithTitle:@"Cancel"];
-//        [dialog addButtonWithTitle:@"OK"];
-        
-//        otpField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, 45.0, 245.0, 25.0)];
-//        [otpField setBackgroundColor:[UIColor grayColor]];
-//        [dialog addSubview:otpField];
-        [dialog show];
-
-        CGAffineTransform moveUp = CGAffineTransformMakeTranslation(0.0, 100.0);
-        [dialog setTransform: moveUp];
-
-    }
-//    NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
-//    [userArray addObject:[dict objectForKey:@"USERRESULT"]];
-//    
-//    
-//    //NSString *valueToSave = @"someValue";
-//    [[NSUserDefaults standardUserDefaults] setObject:@"guest" forKey:@"User_type"];
-//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] forKey:@"agentID"];
-//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"MARKUPCLASS"] forKey:@"markupclass"];
-//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USEREMAIL"] forKey:@"usermail"];
-//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
-//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERMOBILE"]  forKey:@"usermobile"];
-//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERNAME"] forKey:@"username"];
-//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERPHONE"] forKey:@"userphone"];
-//    [[NSUserDefaults standardUserDefaults] setObject:   [[userArray objectAtIndex:0]valueForKey:@"USERPHOTO"] forKey:@"userphoto"];
-//    [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"is_master_user"] forKey:@"is_master_user"];
-//    
-//    [[NSUserDefaults standardUserDefaults] synchronize];
-//    
-//    
-//    
-//    if ([[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] isEqualToString:@"0"]) {
-//        
-//        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Invalid Username or Password" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
-//        [alert show];
-//    }
-//    else{
-//        
-//        [self performSegueWithIdentifier:@"GoToMainViewController" sender:self];
-//        
-//    }
 //
-//    
-//    NSLog(@"%@", dict);
-    
+        if ([[[userArray objectAtIndex:0]valueForKey:@"OTACODE"] isEqualToString:@"0"]) {
+            
+            UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:@"TravKart" message:@"already registered" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+            [dialog show];
+        }
+        
+        else{
+            UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:@"Enter OTP" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+            [dialog setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            
+            //        [dialog setDelegate:self];
+            //        [dialog setTitle:@"Enter OTP"];
+            //        [dialog setMessage:@" "];
+            //        [dialog addButtonWithTitle:@"Cancel"];
+            //        [dialog addButtonWithTitle:@"OK"];
+            
+            //        otpField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, 45.0, 245.0, 25.0)];
+            //        [otpField setBackgroundColor:[UIColor grayColor]];
+            //        [dialog addSubview:otpField];
+            
+            [dialog show];
+            
+            CGAffineTransform moveUp = CGAffineTransformMakeTranslation(0.0, 100.0);
+            [dialog setTransform: moveUp];
+
+        }
+       
+    }
+
 }
 
 
@@ -176,11 +177,13 @@
         if ([[[alertView textFieldAtIndex:0]text] isEqualToString:strOtp ]) {
             
             [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
-            [[NSUserDefaults standardUserDefaults] setObject:[ self.email.text valueForKey:@"USEREMAIL"] forKey:@"usermail"];
-            [[NSUserDefaults standardUserDefaults] setObject:[ self.firtsName.text valueForKey:@"USERNAME"] forKey:@"username"];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
+            [[NSUserDefaults standardUserDefaults] setObject:self.email.text forKey:@"usermail"];
+            [[NSUserDefaults standardUserDefaults] setObject:self.firtsName.text forKey:@"username"];
+            
+            [[NSUserDefaults standardUserDefaults] synchronize];
 
-            [self.navigationController popViewControllerAnimated:NO];
+            [self performSegueWithIdentifier:@"gotohome" sender:self];
+            //[self.navigationController popViewControllerAnimated:NO];
             NSLog(@"loginSuccess!");
             
         }
@@ -198,7 +201,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -206,6 +209,6 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
-*/
+
 
 @end

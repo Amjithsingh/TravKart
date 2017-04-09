@@ -11,4 +11,5 @@
 
 @interface TKFirstViewController : UIViewController
 - (IBAction)openSideMenuAction:(id)sender ;
+@property BOOL isReferAndEarn;
 @end

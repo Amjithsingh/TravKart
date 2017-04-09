@@ -7,12 +7,14 @@
 //
 
 #import "TKHomeViewController.h"
+#import "TKFirstViewController.h"
 @import GoogleSignIn;
 @import Firebase;
 
 
 
 @interface TKHomeViewController ()
+@property (nonatomic,strong) TKFirstViewController *firstVC;
 
 - (void)openSideMenuFromLeft;
 
@@ -112,7 +114,7 @@
             break;
             
         case 5:
-            identifier = @"showFirstVC";
+            identifier = @"notification";
             break;
         case 6:
             identifier = @"common_Identifier";
@@ -145,10 +147,12 @@
             identifier = @"common_Identifier";
             break;
         case 16:
-            identifier = @"refer_identifier";
+//            self.firstVC =  [[TKFirstViewController alloc] init];
+//            self.firstVC.isReferAndEarn =   YES;
+            identifier = @"showFirstVC";
             break;
         case 17:
-            identifier = @"common_Identifier";
+            identifier = @"showFirstVC";
             break;
         case 18:
             identifier = @"common_Identifier";
@@ -160,7 +164,7 @@
             identifier = @"common_Identifier";
             break;
         case 21:
-            identifier = @"common_Identifier";
+            identifier = @"showFirstVC";
             break;
         case 22:
             identifier = @"common_Identifier";

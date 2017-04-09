@@ -47,7 +47,7 @@
     
     
     date = [NSString stringWithFormat:@"%@",_pickDate.date];
-    _dateText.text  =   [date substringToIndex:13];
+    _dateText.text  =   [date substringToIndex:10];
     
 }
 
@@ -83,7 +83,12 @@
    forHTTPHeaderField:@"Content-type"];
     
     date = [NSString stringWithFormat:@"%@",_pickDate.date];
-    NSString *formattedDate =   [date substringToIndex:13];
+    NSString *formattedDate =   [date substringToIndex:10];
+    NSArray *arrDate    =   [formattedDate componentsSeparatedByString:@"-"];
+    NSString *day   =   [arrDate objectAtIndex:0];
+    NSString *month =   [arrDate objectAtIndex:1];
+    NSString *year  =   [arrDate objectAtIndex:2];
+    NSString *ddyy  =   [NSString stringWithFormat:@"%@%@",day,year];
 //    //"<senddata>" +
 //    "<FirstName>" + name] + "</FirstName>" +
 //    "<ContactNumber>" + number]+ "</ContactNumber>" +
@@ -97,7 +102,7 @@
     if ([Utility reachable]) {
         
         
-        NSString *xmlString = [NSString stringWithFormat:@"<senddata><Firstname>%@</Firstname><ContactNumber>%@</ContactNumber><Email>%@</Email><Destination>%@</Destination><TMonth>%@</TMonth><ddlEnTYear>%@</ddlEnTYear><MoreDetail>%@</MoreDetail></senddata>",_name.text,_contactNumber.text,_email.text,_destination.text,formattedDate,_extra.text];
+        NSString *xmlString = [NSString stringWithFormat:@"<senddata><Firstname>%@</Firstname><ContactNumber>%@</ContactNumber><Email>%@</Email><Destination>%@</Destination><TMonth>%@</TMonth><ddlEnTYear>%@</ddlEnTYear><MoreDetail>%@</MoreDetail></senddata>",_name.text,_contactNumber.text,_email.text,_destination.text,month,ddyy,_extra.text];
         
         [request setValue:[NSString stringWithFormat:@"%lu",
                            (unsigned long)[xmlString length]]
@@ -137,7 +142,28 @@
     NSError *error1;
     NSDictionary *dict=[XMLReader dictionaryForXMLData:xmlData error:&error1];
     
-    NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
+    NSMutableArray *userArray   = (NSMutableArray*) dict;
+    
+    if (!(userArray == nil)) {
+        
+        if ([[userArray  valueForKey:@"valid"] isEqualToString:@"success"]) {
+            
+            UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Your enquiry registered" delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil];
+            
+            alert.tag = 100;
+            [alert show];
+            
+        }
+
+    }
+    else{
+        
+        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Please try again" delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil];
+        
+        [alert show];
+
+    }
+    
     //[userArray addObject:[dict objectForKey:@"USERRESULT"]];
     
     
@@ -173,6 +199,14 @@
     
 }
 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if (alertView.tag == 100) {
+        
+        [self.navigationController popToRootViewControllerAnimated:NO];
+    }
+    
+}
 
 
 - (void)didReceiveMemoryWarning {

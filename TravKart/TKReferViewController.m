@@ -34,6 +34,33 @@
     self.mobile.delegate    =   self;
 }
 
+-(void) viewWillAppear:(BOOL)animated
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    // getting an NSString
+    NSString* userID    = [prefs stringForKey:@"userID"];
+    
+    if ([userID  isEqual: @"0"]) {
+    
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"poptoroot" object:nil];
+    }
+    else if (userID == nil)
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"poptoroot" object:nil];
+    }
+    else{
+        
+//        [Utility addtoplist:@"111" key:@"index" plist:@"TravKart_Info"];
+//        
+//        [self performSegueWithIdentifier:@"common_Identifier" sender:self];
+    }
+    
+
+   
+
+}
+
+
 
 
 -(BOOL) textFieldShouldReturn:(UITextField *)textField{

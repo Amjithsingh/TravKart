@@ -13,7 +13,7 @@
 
 
 
-@interface TKCommonViewController ()<UIWebViewDelegate,UITextFieldDelegate>
+@interface TKCommonViewController ()<UIWebViewDelegate,UITextFieldDelegate,UIAlertViewDelegate>
 {
     UIActivityIndicatorView *activityIndicator;
 }
@@ -259,11 +259,29 @@
     //self.activityLoaderView.hidden  =   NO;
     //[self.webLoader stopAnimating];
     
+//    NSURL *currentURL   =   webView.request.URL;
+    NSString *tempUrl   =   [NSString stringWithFormat:@"%@",webView.request.URL];
+    NSArray *tempStr    =   [tempUrl componentsSeparatedByString:@"?"];
+    NSArray *tempValue  =   [[tempStr objectAtIndex:1] componentsSeparatedByString:@"&"];
+    NSArray *bookID     =   [[tempValue objectAtIndex:0] componentsSeparatedByString:@"="];
+    NSArray *pkgID      =   [[tempValue objectAtIndex:1] componentsSeparatedByString:@"="];
+
+    NSString *bookIDStr =   [bookID objectAtIndex:1];
+    NSString *pkgIDStr  =   [pkgID objectAtIndex:1];
+
+    if (![bookIDStr isEqualToString:@""]) {
+        
+        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Do you want to download itinerary" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+        [alert show];
+    }
     activityIndicator.hidden    =   YES;
     
 }
 
-
+-(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

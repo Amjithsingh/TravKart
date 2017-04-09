@@ -9,5 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface TKNotificationsViewController : UIViewController
+@property BOOL fromAppDelegate;
+@property (weak, nonatomic) IBOutlet UILabel *notificationTitle;
+@property NSString *NotificationUrl;
 
 @end

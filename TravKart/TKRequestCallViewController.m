@@ -43,7 +43,7 @@
     
     self.userName.delegate  =   self;
     self.userCode.delegate  =   self;
-    self.userCode.delegate  =   self;
+    self.userMObile.delegate  =   self;
 }
 - (IBAction)submitRequest:(id)sender {
     
@@ -70,9 +70,9 @@
     
     
     if ([Utility reachable]) {
-        NSString *mobNo =   [NSString stringWithFormat:@"%@,%@",_userCode.text,_userMObile.text ];
+        NSString *mobNo =   [NSString stringWithFormat:@"%@%@",_userCode.text,_userMObile.text ];
         
-        NSString *xmlString = [NSString stringWithFormat:@"<senddata><name>%@</name><mobno>%@</mobno></senddata>",_userName.text,mobNo];
+        NSString *xmlString = [NSString stringWithFormat:@"<logdata><name>%@</name><mobno>%@</mobno></logdata>",_userName.text,mobNo];
         
         [request setValue:[NSString stringWithFormat:@"%lu",
                            (unsigned long)[xmlString length]]
@@ -111,16 +111,24 @@
     NSError *error1;
     NSDictionary *dict=[XMLReader dictionaryForXMLData:xmlData error:&error1];
     
-    if (dict == nil) {
-        
-    }
-    else{
-        
-        NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
-        //[userArray addObject:[dict objectForKey:@"USERRESULT"]];
-        
-    }
+//    if (dict == nil) {
+//        
+//        
+//    }
+//    else{
     
+//        NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
+
+//      [userArray addObject:[dict objectForKey:@"USERRESULT"]];
+        
+        
+        UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Travkart team will call you shortly!" delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil];
+    
+        [alert show];
+        
+//
+//    }
+//    
     
     //    //NSString *valueToSave = @"someValue";
     //    [[NSUserDefaults standardUserDefaults] setObject:@"guest" forKey:@"User_type"];

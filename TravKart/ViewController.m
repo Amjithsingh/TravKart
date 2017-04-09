@@ -145,14 +145,16 @@ didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
                                           NSString *email = user.email;
                                           NSString *photoUrl  =   user.photoURL;
                                           
-                                          [self sendDetailsToServer:name withPassword:nil];
+                                          
+                                              [self sendDetailsToServer:name withPassword:nil];
+                                          
                                           return;
                                       }}] ;
         
     }
     
          else {
-        NSLog(error.localizedDescription);
+        NSLog(@"%@", error.localizedDescription);
     }
 }
 
@@ -247,15 +249,15 @@ didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
 -(void) viewWillAppear:(BOOL)animated
 {
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    // getting an NSString
-    NSString *userID    = [prefs stringForKey:@"userID"];
-    //NSString *userType  = [prefs stringForKey:@"User_type"];
-    
-    if (![userID isEqualToString: @"0"]) {
-        [self performSegueWithIdentifier:@"GoToMainViewController" sender:self];
-
-    }
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    // getting an NSString
+//    NSString *userID    = [prefs stringForKey:@"userID"];
+//    //NSString *userType  = [prefs stringForKey:@"User_type"];
+//    
+//    if (![userID isEqualToString: @"0"]) {
+//        [self performSegueWithIdentifier:@"GoToMainViewController" sender:self];
+//
+//    }
 
 }
 - (NSManagedObjectContext *)managedObjectContext {
@@ -287,8 +289,14 @@ didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
 - (IBAction)googleSignin_btn:(id)sender {
 
     
-    
-    [[GIDSignIn sharedInstance] signIn];
+    if ([Utility reachable]) {
+        
+        [[GIDSignIn sharedInstance] signIn];
+    }
+    else{
+        UIAlertView *alrt   =   [[UIAlertView alloc] initWithTitle:@"TravKart" message:@"Please check your network connectivity and try again" delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil];
+        [alrt show];
+    }
 //    [[[FIRAuth auth] signInWithCredential:credential
 //                              completion:^(FIRUser *user, NSError *error) {
 //                                  // ...
@@ -387,6 +395,9 @@ didSignInForUser:(GIDGoogleUser *)user
                                                        options:kNilOptions error:&error];
         
         NSMutableString *urlString      =   [[NSMutableString alloc]initWithFormat:@"[%@]",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]];
+        
+        NSLog(@"result %@",urlString);
+        
         NSData *postData                =   [urlString dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
         
         
@@ -470,9 +481,14 @@ didSignInForUser:(GIDGoogleUser *)user
         FIRUser *user = [FIRAuth auth].currentUser;
         NSString *name = user.displayName;
         NSString *email = user.email;
-        NSString *photoUrl  =   user.photoURL;
+        NSString *photoUrl  =  [NSString stringWithFormat:@"%@", user.photoURL];
     
-        xmlString   =  [NSString stringWithFormat:@"<logdata><name>%@</name><email>%@</email><imageurl>%@</imageurl><Number>null</Number><type>%@</type></logdata>",name,email,photoUrl,user_type];
+    photoUrl =  [photoUrl stringByReplacingOccurrencesOfString:@"&" withString:@"^^^"];
+    
+    
+  
+    
+        xmlString   =  [NSString stringWithFormat:@"<logdata><name>%@</name><email>%@</email><imageurl>%@</imageurl><type>%@</type><Number>null</Number></logdata>",name,email,photoUrl,user_type];
 
 //    }
 //    else{
@@ -583,37 +599,50 @@ didSignInForUser:(GIDGoogleUser *)user
         NSMutableArray *userArray   =   [[NSMutableArray alloc] init];
         [userArray addObject:[dict objectForKey:@"USERRESULT"]];
         
-        
-        //NSString *valueToSave = @"someValue";
-        [[NSUserDefaults standardUserDefaults] setObject:user_type forKey:@"User_type"];
-        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] forKey:@"agentID"];
-        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"MARKUPCLASS"] forKey:@"markupclass"];
-        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USEREMAIL"] forKey:@"usermail"];
-        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
-        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERMOBILE"]  forKey:@"usermobile"];
-        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERNAME"] forKey:@"username"];
-        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERPHONE"] forKey:@"userphone"];
-        [[NSUserDefaults standardUserDefaults] setObject:   [[userArray objectAtIndex:0]valueForKey:@"USERPHOTO"] forKey:@"userphoto"];
-        [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"is_master_user"] forKey:@"is_master_user"];
-        
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        
-        [self sendDeviceDetailsForNotification];
-        
-        
-        
-        if ([[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] isEqualToString:@"0"]) {
+        if ([[[userArray objectAtIndex:0]valueForKey:@"USERID"] isEqualToString:@"0" ] ) {
             
-            UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Invalid Username or Password" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
+            UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Invalid Username or Password " delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
             [alert show];
-        }
-        else{
-            
-            [self performSegueWithIdentifier:@"GoToMainViewController" sender:self];
-            
-        }
 
+        }
+        
+        else{
+            //NSString *valueToSave = @"someValue";
+            [[NSUserDefaults standardUserDefaults] setObject:user_type forKey:@"User_type"];
+            [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] forKey:@"agentID"];
+            [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"MARKUPCLASS"] forKey:@"markupclass"];
+            [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USEREMAIL"] forKey:@"usermail"];
+            [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERID"] forKey:@"userID"];
+            [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERMOBILE"]  forKey:@"usermobile"];
+            [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERNAME"] forKey:@"username"];
+            [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"USERPHONE"] forKey:@"userphone"];
+            [[NSUserDefaults standardUserDefaults] setObject:   [[userArray objectAtIndex:0]valueForKey:@"USERPHOTO"] forKey:@"userphoto"];
+            [[NSUserDefaults standardUserDefaults] setObject:[[userArray objectAtIndex:0]valueForKey:@"is_master_user"] forKey:@"is_master_user"];
+            
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [self sendDeviceDetailsForNotification];
+            });
+
+            
+          
+            if ([[[userArray objectAtIndex:0]valueForKey:@"AGENTID"] isEqualToString:@"0"]) {
+                
+                UIAlertView *alert  =   [[UIAlertView alloc] initWithTitle:@"Travkart" message:@"Invalid Username or Password" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+                [alert show];
+            }
+            else{
+                
+                [self performSegueWithIdentifier:@"GoToMainViewController" sender:self];
+                
+            }
+
+        }
+        
+        
+        
+       
     }
     else
     {
@@ -934,6 +963,10 @@ didSignInForUser:(GIDGoogleUser *)user
          fromViewController:self
          handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
              if (error) {
+                 UIAlertView * networkAlert  =   [[UIAlertView alloc]initWithTitle:@"TravKart" message:@"Please check your internet connection and try again" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                 [networkAlert show];
+
+                 
                  NSLog(@"Process error");
              } else if (result.isCancelled) {
                  NSLog(@"Cancelled");

@@ -5,11 +5,13 @@
 //  Created by AMJITH  on 16/01/17.
 //  Copyright © 2017 Dunamis. All rights reserved.
 //
+#define YOUR_APP_STORE_ID 1199727772 //Change this one to your ID
 
 #import "TKFirstViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "Utility.h"
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <ZDCChat/ZDCChat.h>
 
 @import GoogleSignIn;
 @import FirebaseAuth;
@@ -31,7 +33,25 @@
     // Do any additional setup after loading the view.
     
     [self addLeftMenuButton];
+    
 }
+- (IBAction)chatAction:(id)sender {
+    
+    // track the event
+    [[ZDCChat instance].api trackEvent:@"Chat button pressed: (no pre-chat form)"];
+    
+    // start a chat pushed on to the current navigation controller
+    // with session config setting all pre-chat fields as not required
+    [ZDCChat startChatIn:self.navigationController withConfig:^(ZDCConfig *config) {
+        config.preChatDataRequirements.name = ZDCPreChatDataNotRequired;
+        config.preChatDataRequirements.email = ZDCPreChatDataNotRequired;
+        config.preChatDataRequirements.phone = ZDCPreChatDataNotRequired;
+        config.preChatDataRequirements.department = ZDCPreChatDataNotRequired;
+        config.preChatDataRequirements.message = ZDCPreChatDataNotRequired;
+        config.emailTranscriptAction = ZDCEmailTranscriptActionNeverSend;
+    }];
+}
+
 - (IBAction)callAction:(id)sender {
     
     NSString *phoneNumber = [@"tel://" stringByAppendingString:@"+918010038038"];
@@ -103,9 +123,49 @@
         [self.view addSubview:noInternet];
     }
     
-    
+    NSString *indexValue    =   [Utility getfromplist:@"index" plist:@"TravKart_Info"];
+
+    if ([indexValue isEqualToString:@"16"]) {
+        [self shareTravkartApp];
+    }
+    else if ([indexValue isEqualToString:@"17"]){
+        [self rateTravKart];
+    }
+    else if ([indexValue isEqualToString:@"21"]){
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"poptoroot" object:self];
+
+    }
+    else{
+        
+    }
 }
 
+-(void) rateTravKart
+{
+    static NSString *const iOS7AppStoreURLFormat = @"itms-apps://itunes.apple.com/app/id%d";
+    static NSString *const iOSAppStoreURLFormat = @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%d";
+    
+    NSURL  *url     =   [NSURL URLWithString:[NSString stringWithFormat:([[UIDevice currentDevice].systemVersion floatValue] >= 7.0f)? iOS7AppStoreURLFormat: iOSAppStoreURLFormat, YOUR_APP_STORE_ID]]; // Would contain the right link
+    [[UIApplication sharedApplication] openURL:url];
+}
+
+-(void) shareTravkartApp
+{
+    
+    NSMutableArray *sharingItems = [NSMutableArray new];
+    
+    
+    [sharingItems addObject:@"TravKart"];
+    
+    NSURL *url  =   [NSURL URLWithString:@"https://itunes.apple.com/us/app/travkart/id1199727772?ls=1&mt=8"];
+    [sharingItems addObject:url];
+    
+    
+    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:sharingItems applicationActivities:nil];
+    [self presentViewController:activityController animated:YES completion:nil];
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -160,9 +220,17 @@
     
     //self.activityLoaderView.hidden  =   NO;
     //[self.webLoader stopAnimating];
-    
+    [activityIndicator stopAnimating];
+    [activityIndicator removeFromSuperview];
     activityIndicator.hidden    =   YES;
     
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;
+{
+ 
+    activityIndicator.hidden    =   YES;
+
 }
 
 -(BOOL) textFieldShouldReturn:(UITextField *)textField{
