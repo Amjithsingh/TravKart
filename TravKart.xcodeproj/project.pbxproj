@@ -121,6 +121,9 @@
 		79AD00A01E335C1200D7A6A5 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AD009E1E335C1200D7A6A5 /* Utility.m */; };
 		79AD00A61E335EF500D7A6A5 /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AD00A51E335EF500D7A6A5 /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		79AD00A81E33631700D7A6A5 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 79AD00A71E33631700D7A6A5 /* libxml2.2.tbd */; };
+		79CA65B01EE10CF9004F81C4 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79CA65AF1EE10CF9004F81C4 /* AdSupport.framework */; };
+		79CA65B21EE10CFE004F81C4 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79CA65B11EE10CFE004F81C4 /* iAd.framework */; };
+		79CA65B61EE10E12004F81C4 /* AppsFlyerLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79CA65B51EE10E12004F81C4 /* AppsFlyerLib.framework */; };
 		79E1D6FA1E3371FF0069D0D1 /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 79E1D6F81E3371FF0069D0D1 /* XMLReader.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		79E3BC131E3602F8001FF2CB /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79E3BC121E3602F8001FF2CB /* FBSDKLoginKit.framework */; };
 		79E3BC151E360387001FF2CB /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79E3BC141E360387001FF2CB /* FBSDKCoreKit.framework */; };
@@ -327,6 +330,10 @@
 		79AD00A41E335EF500D7A6A5 /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
 		79AD00A51E335EF500D7A6A5 /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
 		79AD00A71E33631700D7A6A5 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
+		79CA65AF1EE10CF9004F81C4 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		79CA65B11EE10CFE004F81C4 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		79CA65B31EE10D68004F81C4 /* AppsFlyerLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppsFlyerLib.framework; path = ../../Downloads/AppsFlyerLib.framework; sourceTree = "<group>"; };
+		79CA65B51EE10E12004F81C4 /* AppsFlyerLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppsFlyerLib.framework; sourceTree = "<group>"; };
 		79E1D6F81E3371FF0069D0D1 /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
 		79E1D6F91E3371FF0069D0D1 /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
 		79E3BC121E3602F8001FF2CB /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -352,6 +359,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79CA65B61EE10E12004F81C4 /* AppsFlyerLib.framework in Frameworks */,
+				79CA65B21EE10CFE004F81C4 /* iAd.framework in Frameworks */,
+				79CA65B01EE10CF9004F81C4 /* AdSupport.framework in Frameworks */,
 				79A144541E98C17100116950 /* ZDCChat.bundle in Frameworks */,
 				79A144551E98C17100116950 /* ZDCChat.framework in Frameworks */,
 				79A144561E98C17100116950 /* ZDCChatAPI.framework in Frameworks */,
@@ -694,6 +704,10 @@
 		DBF549152D1E9AC7FA2FAD55 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				79CA65B51EE10E12004F81C4 /* AppsFlyerLib.framework */,
+				79CA65B31EE10D68004F81C4 /* AppsFlyerLib.framework */,
+				79CA65B11EE10CFE004F81C4 /* iAd.framework */,
+				79CA65AF1EE10CF9004F81C4 /* AdSupport.framework */,
 				79A144501E98C17100116950 /* ZDCChat.bundle */,
 				79A144511E98C17100116950 /* ZDCChat.framework */,
 				79A144521E98C17100116950 /* ZDCChatAPI.framework */,

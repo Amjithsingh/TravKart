@@ -37,7 +37,7 @@
     if (self.fromAppDelegate == YES && ![self.NotificationUrl isEqual:nil]) {
         
         self.notificationTableView.hidden   =   YES;
-        self.notificationTitle.hidden       =   YES;
+//        self.notificationTitle.hidden       =   YES;
         self.notificationWebView.hidden     =   NO;
         
         

@@ -15,6 +15,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
+#import <AdSupport/ASIdentifierManager.h>
 
 @import Firebase;
 @import GoogleSignIn;
@@ -79,6 +80,13 @@ GIDSignInUIDelegate,NSURLConnectionDelegate,FBSDKLoginButtonDelegate>
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 
+    
+    NSString *idfaString = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    
+    NSLog(@"IDFA - %@",idfaString);
+
+    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skipActionHandler:) name:@"pushtoHomeVC" object:nil];
     
     

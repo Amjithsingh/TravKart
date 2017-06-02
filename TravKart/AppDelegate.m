@@ -14,7 +14,7 @@
 #import "TKHomeViewController.h"
 #import "Utility.h"
 #import "TKNotificationsViewController.h"
-
+#import <AppsFlyerLib/AppsFlyerTracker.h>
 
 @interface AppDelegate ()
 
@@ -30,9 +30,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    
+    [AppsFlyerTracker sharedTracker].appsFlyerDevKey = @"rP65dPGYhQxUKV6X7frTtW";
+    [AppsFlyerTracker sharedTracker].appleAppID = @"1199727772";
+
     [ZDCChat initializeWithAccountKey:@"37G3HFs6cdd9tADzMq7vVzciCZXLLx4P"];
 
+    
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
         // iOS 7.1 or earlier
         UIRemoteNotificationType allNotificationTypes =
@@ -520,6 +523,8 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [FBSDKAppEvents activateApp];
+    [[AppsFlyerTracker sharedTracker] trackAppLaunch];
+
 }
 
 
