@@ -775,7 +775,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0820;
-				ORGANIZATIONNAME = Dunamis;
+				ORGANIZATIONNAME = CRS;
 				TargetAttributes = {
 					32D6453A1E1F7EBF000F15D9 = {
 						CreatedOnToolsVersion = 8.2.1;

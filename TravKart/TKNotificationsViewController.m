@@ -10,6 +10,7 @@
 #import "Utility.h"
 #import "TKRemoteNotificationTableViewCell.h"
 #import "TKRemoteImageTableViewCell.h"
+#import "TKHomeViewController.h"
 
 @interface TKNotificationsViewController ()<UITableViewDelegate,UITableViewDataSource,UIWebViewDelegate>
 {
@@ -70,7 +71,13 @@
         }
         else{
             //        [self performSegueWithIdentifier:@"back_Offers" sender:self];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"poptoroot" object:self];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"poptoroot" object:self];
+
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+            TKHomeViewController *lvc = [storyboard instantiateViewControllerWithIdentifier:@"homecontroller"];
+            
+            [(UINavigationController *)self.navigationController pushViewController:lvc animated:NO];
+
             
         }
     }
